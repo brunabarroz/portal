@@ -1,0 +1,12 @@
+---
+// Cartão de indicação com link externo (ferramentas, hospedagens, equipamentos).
+import Ficha from './Ficha.astro';
+import BotaoLink from './BotaoLink.astro';
+import Texto from './Texto.astro';
+interface Props { nome: string; etiqueta?: string; descricao?: string; link?: string; exemplo?: boolean; imagem?: string; rotulo?: string }
+const { nome, etiqueta, descricao, link, exemplo, imagem, rotulo = 'Ver indicação' } = Astro.props;
+---
+<Ficha titulo={nome} etiqueta={etiqueta} exemplo={exemplo} capa={imagem === undefined ? undefined : imagem}>
+  <p class="ficha__resumo"><Texto valor={descricao} falta="descrição" /></p>
+  <div class="ficha__rodape"><BotaoLink href={link} rotulo={rotulo} variante="claro" /></div>
+</Ficha>

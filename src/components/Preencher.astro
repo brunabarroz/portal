@@ -1,0 +1,7 @@
+---
+// Marcador amarelo para informação que ainda falta.
+interface Props { texto?: string }
+const { texto = '' } = Astro.props;
+const limpo = texto.replace(/^\[PREENCHER:?\s*/, '').replace(/\]$/, '');
+---
+<span class="preencher">[PREENCHER{limpo ? `: ${limpo}` : ''}]</span>

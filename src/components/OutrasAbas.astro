@@ -1,0 +1,31 @@
+---
+// Fim de página: as outras duas áreas como pastas empilhadas.
+import { AREAS, ORDEM_AREAS, type AreaId } from '../lib/estrutura';
+import Clipe from './Clipe.astro';
+interface Props { area: AreaId }
+const { area } = Astro.props;
+const outras = ORDEM_AREAS.filter((id) => id !== area);
+---
+<aside class="outras" aria-labelledby="continue-folheando">
+  <div class="outras__inner">
+    <h2 class="outras__titulo" id="continue-folheando"><span>continue</span>folheando as outras pastas</h2>
+    <ul class="outras__pilha">
+      {outras.map((id, i) => (
+        <li>
+          <a class:list={['pasta', `pasta--${id}`, i % 2 === 1 && 'pasta--direita']} href={AREAS[id].href}>
+            <span class="pasta__aba">{AREAS[id].numero} · {AREAS[id].nome}</span>
+            <span class="pasta__corpo">
+              <span class="pasta__enfeite"><Clipe tipo={i % 2 ? 'prendedor' : 'clipe'} estilo="position:static" /></span>
+              <span class="pasta__texto">
+                <span class="pasta__nome">{AREAS[id].nome}</span>
+                <span class="pasta__desc">{AREAS[id].convite}</span>
+                <span class="pasta__abrir">abrir esta pasta</span>
+              </span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="rodape"><span class="script">Bruna Barros</span>carreira internacional · viagens · © {new Date().getFullYear()}</p>
+  </div>
+</aside>

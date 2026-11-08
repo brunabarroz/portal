@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Cabecalho from '../../components/Cabecalho.astro';
+import Indicacao from '../../components/Indicacao.astro';
+const itens = await getCollection('hospedagens');
+const destinos = await getCollection('destinos');
+const nome = (slug?: string) => destinos.find((d) => d.slug === slug)?.data.titulo;
+const grupos = (['Hospedagem', 'Serviço'] as const).map((t) => ({ t, itens: itens.filter((i) => i.data.tipo === t) })).filter((g) => g.itens.length);
+---
+<Base area="viagens" titulo="Hospedagens e serviços" trilha={[{ nome: 'Hospedagens e serviços' }]}>
+  <Cabecalho etiqueta="viagens" titulo="Hospedagens e serviços" descricao="Onde eu fiquei e os serviços que eu recomendo." />
+  {grupos.map((g) => (
+    <section class="secao">
+      <h2>{g.t === 'Hospedagem' ? 'Hospedagens' : 'Serviços'}</h2>
+      <div class="grade">{g.itens.map((i) => <Indicacao nome={i.data.nome} etiqueta={nome(i.data.destino) ?? i.data.tipo} descricao={i.data.descricao} link={i.data.link} exemplo={i.data.exemplo} />)}</div>
+    </section>
+  ))}
+</Base>

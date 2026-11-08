@@ -1,0 +1,20 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Cabecalho from '../../../components/Cabecalho.astro';
+import BotaoLink from '../../../components/BotaoLink.astro';
+import Selo from '../../../components/Selo.astro';
+export async function getStaticPaths() {
+  return (await getCollection('materiais')).map((m) => ({ params: { slug: m.slug }, props: { m } }));
+}
+const { m } = Astro.props;
+const { Content } = await m.render();
+const base = '/carreira-internacional/materiais-gratuitos/';
+---
+<Base area="carreira" titulo={m.data.titulo} descricao={m.data.resumo} trilha={[{ nome: 'Materiais gratuitos', href: base }, { nome: m.data.titulo }]} subAtiva={base}>
+  {m.data.exemplo && <p class="aviso-exemplo"><Selo /> Este material é demonstrativo: ele mostra o layout. Substitua pelo seu.</p>}
+  <Cabecalho etiqueta="material gratuito" titulo={m.data.titulo} descricao={m.data.resumo} />
+  {m.data.capa && <img src={m.data.capa} alt="" style="max-width:320px;border-radius:4px;margin-bottom:24px" />}
+  <div class="texto-longo"><Content /></div>
+  <p style="margin-top:28px"><BotaoLink href={m.data.link} rotulo="Baixar material" falta="link para baixar" /></p>
+</Base>

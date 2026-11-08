@@ -1,0 +1,36 @@
+---
+// Cartão de destino com foto em arco (como na referência).
+import type { CollectionEntry } from 'astro:content';
+import Selo from './Selo.astro';
+import { temRoteiro } from '../lib/estrutura';
+interface Props { d: CollectionEntry<'destinos'> }
+const { d } = Astro.props;
+---
+<article class="destino">
+  <div class="destino__arco">
+    {d.data.capa ? <img src={d.data.capa} alt="" loading="lazy" /> : <span class="destino__sigla">{d.data.sigla ?? '✈'}</span>}
+  </div>
+  <div class="destino__info">
+    <p class="destino__pais caps">{d.data.pais}{temRoteiro(d) && ' · roteiro'}</p>
+    <h3><a class="ficha__link" href={`/viagens/destinos/${d.slug}/`}>{d.data.titulo}</a></h3>
+    {d.data.exemplo && <Selo />}
+  </div>
+</article>
+<style>
+  .destino { position: relative; text-align: center; transition: transform .25s ease; }
+  .destino:has(a:hover), .destino:has(a:focus-visible) { transform: translateY(-4px); }
+  .destino__arco {
+    aspect-ratio: 4 / 5; border-radius: 999px 999px 4px 4px; overflow: hidden;
+    border: 1px solid var(--linha); outline: 1px solid var(--area-forte); outline-offset: 6px;
+    background:
+      radial-gradient(ellipse 70% 50% at 30% 25%, rgba(255,255,255,.8), transparent 70%),
+      linear-gradient(175deg, var(--azul-claro), var(--areia-claro) 70%);
+    display: grid; place-items: center; margin: 8px 8px 0;
+  }
+  .destino__arco img { width: 100%; height: 100%; object-fit: cover; }
+  .destino__sigla { font-family: var(--f-script); font-size: 3rem; color: var(--area-forte); }
+  .destino__info { padding-top: 18px; }
+  .destino__pais { color: var(--texto-suave); margin: 0 0 2px; font-size: .68rem; }
+  .destino h3 { font-size: 1.8rem; margin-bottom: 6px; }
+  .destino h3 a { color: var(--noite); text-decoration: none; }
+</style>

@@ -1,0 +1,8 @@
+---
+// Clipe de papel ou prendedor (decoração).
+interface Props { tipo?: 'clipe' | 'prendedor'; estilo?: string }
+const { tipo = 'clipe', estilo = '' } = Astro.props;
+---
+{tipo === 'clipe'
+  ? <svg class="clipe" style={estilo} viewBox="0 0 18 46" aria-hidden="true" fill="none" stroke="#9A9AA0" stroke-width="1.8" stroke-linecap="round"><path d="M12 14v20a3.5 3.5 0 0 1-7 0V8a5.5 5.5 0 0 1 11 0v26a7 7 0 0 1-14 0V14" /></svg>
+  : <svg class="prendedor" style={estilo} viewBox="0 0 34 40" aria-hidden="true"><path d="M7 2c-4 0-5 10 2 14M27 2c4 0 5 10-2 14" fill="none" stroke="#8A8A90" stroke-width="2"/><path d="M3 16h28l-3 22H6z" fill="#2B2A2E"/><path d="M6 19h22" stroke="#55545A" stroke-width="1"/></svg>}

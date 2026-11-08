@@ -1,0 +1,18 @@
+{
+  "nome": "Direito na Gringa",
+  "chamada": "[PREENCHER: uma frase que resume o curso]",
+  "descricao": "[PREENCHER: apresentação do curso, com 1 ou 2 parágrafos explicando o que a pessoa vai aprender]",
+  "paraQuem": [
+    "[PREENCHER: perfil de quem deve fazer o curso — item 1]",
+    "[PREENCHER: perfil de quem deve fazer o curso — item 2]",
+    "[PREENCHER: perfil de quem deve fazer o curso — item 3]"
+  ],
+  "modulos": [
+    { "titulo": "[PREENCHER: módulo 1]", "descricao": "" },
+    { "titulo": "[PREENCHER: módulo 2]", "descricao": "" },
+    { "titulo": "[PREENCHER: módulo 3]", "descricao": "" }
+  ],
+  "linkHotmart": "[PREENCHER: link da página do curso na Hotmart]",
+  "textoBotao": "Conhecer o curso na Hotmart",
+  "imagem": ""
+}

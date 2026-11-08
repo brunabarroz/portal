@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Cabecalho from '../../components/Cabecalho.astro';
+import Indicacao from '../../components/Indicacao.astro';
+const itens = await getCollection('equipamentos');
+const categorias = [...new Set(itens.map((i) => i.data.categoria ?? 'Outros'))];
+---
+<Base area="viagens" titulo="Equipamentos" trilha={[{ nome: 'Equipamentos' }]}>
+  <Cabecalho etiqueta="viagens" titulo="O que vai na mochila" descricao="Produtos e equipamentos que eu uso nas viagens." />
+  {categorias.length > 1 && <nav class="ancoras" aria-label="Categorias"><ul class="chips">{categorias.map((c) => <li><a class="chip" href={`#${encodeURIComponent(c)}`}>{c}</a></li>)}</ul></nav>}
+  {categorias.map((c) => (
+    <section class="secao" id={encodeURIComponent(c)}>
+      <h2>{c}</h2>
+      <div class="grade">{itens.filter((i) => (i.data.categoria ?? 'Outros') === c).map((i) => <Indicacao nome={i.data.nome} etiqueta={c} descricao={i.data.descricao} link={i.data.link} exemplo={i.data.exemplo} imagem={i.data.imagem ?? ''} rotulo="Ver produto" />)}</div>
+    </section>
+  ))}
+</Base>

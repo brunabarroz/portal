@@ -1,0 +1,20 @@
+---
+import Selo from './Selo.astro';
+import Preencher from './Preencher.astro';
+import { youtubeId } from '../lib/util';
+interface Props { titulo: string; youtube?: string; exemplo?: boolean; etiqueta?: string }
+const { titulo, youtube, exemplo, etiqueta = 'vídeo' } = Astro.props;
+const id = youtubeId(youtube);
+---
+<article class="ficha">
+  {id ? (
+    <a class="video__miniatura" href={youtube} target="_blank" rel="noopener" aria-label={`Assistir no YouTube: ${titulo}`}>
+      <img src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" loading="lazy" />
+    </a>
+  ) : (
+    <div class="video__miniatura video__miniatura--vazia"><span>miniatura do vídeo<br/><Preencher texto="link do YouTube" /></span></div>
+  )}
+  <div class="ficha__etiqueta"><span>{etiqueta}</span>{exemplo && <Selo />}</div>
+  <h3>{titulo}</h3>
+  {id && <div class="ficha__rodape"><a class="ficha__acao" href={youtube} target="_blank" rel="noopener">assistir no YouTube ↗</a></div>}
+</article>

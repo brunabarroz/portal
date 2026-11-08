@@ -1,0 +1,30 @@
+---
+// ABA 03 · VIAGENS (entrada da área)
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Cabecalho from '../../components/Cabecalho.astro';
+import CartaoDestino from '../../components/CartaoDestino.astro';
+import Ficha from '../../components/Ficha.astro';
+import { subAbas } from '../../lib/estrutura';
+
+const destinos = (await getCollection('destinos')).sort((a, b) => a.data.ordem - b.data.ordem);
+const tipos = (await subAbas('viagens')).filter((s) => s.nome !== 'Destinos');
+---
+<Base area="viagens" titulo="Viagens" descricao="Destinos, roteiros, dicas, vídeos, cupons e equipamentos de viagem.">
+  <Cabecalho hero etiqueta="pasta 03" titulo="*Viagens*"
+    descricao="Escolha um destino para ver tudo sobre ele, ou navegue pelo tipo de conteúdo." />
+
+  {destinos.length > 0 && (
+    <section class="secao" aria-labelledby="por-destino">
+      <div class="secao__topo"><h2 id="por-destino">Por destino</h2><a class="ver-tudo" href="/viagens/destinos/">todos os destinos</a></div>
+      <div class="grade grade--3">{destinos.slice(0, 6).map((d) => <CartaoDestino d={d} />)}</div>
+    </section>
+  )}
+
+  <section class="secao" aria-labelledby="por-tipo">
+    <div class="secao__topo"><h2 id="por-tipo">Por tipo de conteúdo</h2></div>
+    <div class="grade grade--3">
+      {tipos.map((t) => <Ficha titulo={t.nome} resumo={t.descricao} href={t.href} orelha={`${t.quantidade} ${t.quantidade === 1 ? 'item' : 'itens'}`} acao="abrir" />)}
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,85 @@
+---
+// Página-hub de um destino: reúne tudo que está marcado com este destino.
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Cabecalho from '../../../components/Cabecalho.astro';
+import Ficha from '../../../components/Ficha.astro';
+import Video from '../../../components/Video.astro';
+import Cupom from '../../../components/Cupom.astro';
+import Indicacao from '../../../components/Indicacao.astro';
+import Selo from '../../../components/Selo.astro';
+import CartaoDestino from '../../../components/CartaoDestino.astro';
+import { temRoteiro } from '../../../lib/estrutura';
+
+export async function getStaticPaths() {
+  return (await getCollection('destinos')).map((d) => ({ params: { slug: d.slug }, props: { d } }));
+}
+const { d } = Astro.props;
+const { Content } = await d.render();
+const deste = <T extends { data: { destino?: string } }>(lista: T[]) => lista.filter((i) => i.data.destino === d.slug);
+
+const roteiro = temRoteiro(d);
+const dicas = deste(await getCollection('dicas'));
+const videos = deste(await getCollection('videos'));
+const hospedagens = deste(await getCollection('hospedagens'));
+const cupons = deste(await getCollection('cupons'));
+const outros = (await getCollection('destinos')).filter((o) => o.slug !== d.slug).sort((a, b) => a.data.ordem - b.data.ordem).slice(0, 3);
+
+const ancoras = [
+  roteiro && { id: 'roteiro', nome: 'Roteiro' },
+  dicas.length && { id: 'dicas', nome: 'Dicas' },
+  videos.length && { id: 'videos', nome: 'Vídeos' },
+  hospedagens.length && { id: 'onde-ficar', nome: 'Onde ficar e serviços' },
+  cupons.length && { id: 'cupons', nome: 'Cupons' },
+].filter(Boolean) as { id: string; nome: string }[];
+const base = '/viagens/destinos/';
+---
+<Base area="viagens" titulo={d.data.titulo} descricao={d.data.resumo} trilha={[{ nome: 'Destinos', href: base }, { nome: d.data.titulo }]} subAtiva={base}>
+  {d.data.exemplo && <p class="aviso-exemplo"><Selo /> Destino demonstrativo, para visualizar o layout. Os textos e links são marcadores.</p>}
+
+  <div class="destino-topo">
+    <Cabecalho etiqueta={d.data.pais ?? 'destino'} titulo={d.data.titulo} descricao={d.data.resumo} />
+    <div class="carimbo" aria-hidden="true"><span>destino<strong>{d.data.sigla ?? '✈'}</strong>{d.data.pais}</span></div>
+  </div>
+  {d.data.capa && <img class="destino-capa" src={d.data.capa} alt={`Foto de ${d.data.titulo}`} />}
+
+  {ancoras.length > 1 && (
+    <nav class="ancoras" aria-label="Nesta página"><ul class="chips">{ancoras.map((a) => <li><a class="chip" href={`#${a.id}`}>{a.nome}</a></li>)}</ul></nav>
+  )}
+
+  {roteiro && (
+    <section class="secao" id="roteiro"><h2>Roteiro</h2><div class="texto-longo"><Content /></div></section>
+  )}
+  {dicas.length > 0 && (
+    <section class="secao" id="dicas"><h2>Dicas</h2>
+      <div class="grade">{dicas.map((t) => <Ficha titulo={t.data.titulo} resumo={t.data.resumo} etiqueta="dica" exemplo={t.data.exemplo} href={`/viagens/dicas/${t.slug}/`} acao="ler dica" />)}</div>
+    </section>
+  )}
+  {videos.length > 0 && (
+    <section class="secao" id="videos"><h2>Vídeos</h2>
+      <div class="grade">{videos.map((v) => <Video titulo={v.data.titulo} youtube={v.data.youtube} exemplo={v.data.exemplo} />)}</div>
+    </section>
+  )}
+  {hospedagens.length > 0 && (
+    <section class="secao" id="onde-ficar"><h2>Onde ficar e serviços</h2>
+      <div class="grade">{hospedagens.map((h) => <Indicacao nome={h.data.nome} etiqueta={h.data.tipo} descricao={h.data.descricao} link={h.data.link} exemplo={h.data.exemplo} />)}</div>
+    </section>
+  )}
+  {cupons.length > 0 && (
+    <section class="secao" id="cupons"><h2>Cupons</h2>
+      <div class="grade">{cupons.map((c) => <Cupom cupom={c} />)}</div>
+    </section>
+  )}
+  {ancoras.length === 0 && <p class="vazio">Ainda não há conteúdos neste destino.</p>}
+
+  {outros.length > 0 && (
+    <section class="secao"><div class="secao__topo"><h2>Outros destinos</h2><a class="ver-tudo" href={base}>todos</a></div>
+      <div class="grade grade--3">{outros.map((o) => <CartaoDestino d={o} />)}</div>
+    </section>
+  )}
+</Base>
+<style>
+  .destino-topo { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+  .destino-capa { width: 100%; max-height: 420px; object-fit: cover; border-radius: 6px; margin-bottom: 28px; }
+  @media (max-width: 600px) { .destino-topo .carimbo { display: none; } }
+</style>

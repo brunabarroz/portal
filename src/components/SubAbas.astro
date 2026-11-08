@@ -1,0 +1,21 @@
+---
+// Categorias dentro da área. A categoria atual fica destacada.
+import { subAbas, type AreaId } from '../lib/estrutura';
+interface Props { area: AreaId; ativa?: string }
+const { area, ativa } = Astro.props;
+const lista = await subAbas(area);
+const caminho = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : Astro.url.pathname + '/';
+---
+{lista.length > 0 && (
+  <nav class="subabas" aria-label="Categorias desta área">
+    <ul>
+      {lista.map((s) => (
+        <li>
+          <a href={s.href}
+             aria-current={caminho === s.href ? 'page' : undefined}
+             data-ativa={caminho !== s.href && ativa === s.href ? '' : undefined}>{s.nome}</a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}

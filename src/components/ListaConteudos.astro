@@ -1,0 +1,22 @@
+---
+// Lista de conteúdos de carreira com filtro por tema (cada tema tem sua página).
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Ficha from './Ficha.astro';
+import { TEMAS, type TemaId } from '../lib/estrutura';
+interface Props { itens: CollectionEntry<'conteudos'>[]; temaAtivo?: TemaId }
+const { itens, temaAtivo } = Astro.props;
+const todos = await getCollection('conteudos');
+const temas = (Object.keys(TEMAS) as TemaId[]).filter((t) => todos.some((c) => c.data.tema === t));
+const base = '/carreira-internacional/conteudos/';
+---
+<nav aria-label="Filtrar por tema" style="margin-bottom:28px">
+  <ul class="chips">
+    <li><a class="chip" href={base} aria-current={!temaAtivo ? 'page' : undefined}>Todos</a></li>
+    {temas.map((t) => <li><a class="chip" href={`${base}tema/${t}/`} aria-current={temaAtivo === t ? 'page' : undefined}>{TEMAS[t]}</a></li>)}
+  </ul>
+</nav>
+<div class="grade">
+  {itens.map((c) => (
+    <Ficha titulo={c.data.titulo} resumo={c.data.resumo} etiqueta={TEMAS[c.data.tema] + (c.data.youtube ? ' · vídeo' : '')} exemplo={c.data.exemplo} href={`${base}${c.slug}/`} acao="ler" />
+  ))}
+</div>

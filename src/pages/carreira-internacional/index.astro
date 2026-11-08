@@ -1,0 +1,77 @@
+---
+// ABA 02 · CARREIRA INTERNACIONAL (entrada da área)
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Cabecalho from '../../components/Cabecalho.astro';
+import Ficha from '../../components/Ficha.astro';
+import Texto from '../../components/Texto.astro';
+import Ornamento from '../../components/Ornamento.astro';
+import { TEMAS, subAbas } from '../../lib/estrutura';
+import { porData } from '../../lib/util';
+import curso from '../../data/curso.json';
+
+const categorias = (await subAbas('carreira')).filter((s) => s.quantidade !== null);
+const guias = await getCollection('guias');
+const materiais = await getCollection('materiais');
+const conteudos = (await getCollection('conteudos')).sort(porData);
+const temasComConteudo = (Object.keys(TEMAS) as (keyof typeof TEMAS)[]).filter((t) => conteudos.some((c) => c.data.tema === t));
+---
+<Base area="carreira" titulo="Carreira internacional" descricao="Curso, guias, materiais gratuitos e conteúdos para buscar oportunidades internacionais.">
+  <Cabecalho hero etiqueta="pasta 02" titulo="Carreira *internacional*"
+    descricao="Tudo o que eu reuni para ajudar você a encontrar oportunidades fora do Brasil e se preparar para elas. Escolha uma categoria." />
+
+  <section class="faixa curso-faixa">
+    <div class="curso-quadro">
+      <Ornamento tipo="brilho" classe="curso-quadro__brilho" />
+      <span class="caps">meu curso</span>
+      <p class="curso-quadro__nome script">{curso.nome}</p>
+      <p class="curso-quadro__chamada"><Texto valor={curso.chamada} /></p>
+      <a class="botao" href="/carreira-internacional/direito-na-gringa/">conhecer o curso</a>
+    </div>
+  </section>
+
+  <section class="secao" aria-labelledby="categorias">
+    <div class="secao__topo"><h2 id="categorias">Categorias</h2></div>
+    <div class="grade grade--3">
+      {categorias.map((c) => (
+        <Ficha titulo={c.nome} resumo={c.descricao} href={c.href} orelha={`${c.quantidade} ${c.quantidade === 1 ? 'item' : 'itens'}`} acao="abrir categoria" />
+      ))}
+    </div>
+  </section>
+
+  {temasComConteudo.length > 0 && (
+    <section class="secao" aria-labelledby="temas">
+      <div class="secao__topo"><h2 id="temas">Conteúdos por tema</h2><a class="ver-tudo" href="/carreira-internacional/conteudos/">ver todos</a></div>
+      <ul class="chips">
+        {temasComConteudo.map((t) => <li><a class="chip" href={`/carreira-internacional/conteudos/tema/${t}/`}>{TEMAS[t]}</a></li>)}
+      </ul>
+    </section>
+  )}
+
+  {(guias.length + materiais.length) > 0 && (
+    <section class="secao" aria-labelledby="materiais">
+      <div class="secao__topo"><h2 id="materiais">Guias e materiais</h2></div>
+      <div class="grade">
+        {guias.slice(0, 2).map((g) => <Ficha titulo={g.data.titulo} resumo={g.data.resumo} etiqueta={g.data.formato} exemplo={g.data.exemplo} href={`/carreira-internacional/guias-e-ebooks/${g.slug}/`} />)}
+        {materiais.slice(0, 2).map((m) => <Ficha titulo={m.data.titulo} resumo={m.data.resumo} etiqueta="gratuito" exemplo={m.data.exemplo} href={`/carreira-internacional/materiais-gratuitos/${m.slug}/`} />)}
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .curso-faixa {
+    background:
+      radial-gradient(ellipse 40% 80% at 10% 50%, rgba(255,255,255,.6), transparent 70%),
+      linear-gradient(120deg, var(--azul-claro), var(--lilas-claro));
+  }
+  .curso-quadro {
+    position: relative; max-width: 520px; margin: 0 auto; text-align: center;
+    background: var(--branco); border: 1px solid var(--noite); padding: 34px 30px 32px;
+    box-shadow: 10px 10px 0 -1px var(--azul);
+  }
+  .curso-quadro .caps { color: var(--texto-suave); }
+  .curso-quadro__nome { font-size: clamp(2.6rem, 5vw, 3.4rem); line-height: 1.1; margin: 4px 0 6px; color: var(--noite); }
+  .curso-quadro__chamada { color: var(--azul-forte); font-family: var(--f-titulo); font-size: 1.3rem; margin-bottom: 22px; }
+  :global(.curso-quadro__brilho) { position: absolute; width: 34px; left: -17px; bottom: -17px; color: var(--noite); }
+</style>

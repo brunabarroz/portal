@@ -1,0 +1,12 @@
+---
+// Caminho até a página atual (ex.: Viagens › Destinos › Barcelona).
+interface Props { itens: { nome: string; href?: string }[] }
+const { itens } = Astro.props;
+---
+<nav class="trilha" aria-label="Você está em">
+  <ol>
+    {itens.map((it, i) => (
+      <li>{i < itens.length - 1 && it.href ? <a href={it.href}>{it.nome}</a> : <span aria-current="page">{it.nome}</span>}</li>
+    ))}
+  </ol>
+</nav>

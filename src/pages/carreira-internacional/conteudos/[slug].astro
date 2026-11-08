@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Cabecalho from '../../../components/Cabecalho.astro';
+import Selo from '../../../components/Selo.astro';
+import { TEMAS } from '../../../lib/estrutura';
+import { youtubeId, formatarData } from '../../../lib/util';
+export async function getStaticPaths() {
+  return (await getCollection('conteudos')).map((c) => ({ params: { slug: c.slug }, props: { c } }));
+}
+const { c } = Astro.props;
+const { Content } = await c.render();
+const id = youtubeId(c.data.youtube);
+const base = '/carreira-internacional/conteudos/';
+---
+<Base area="carreira" titulo={c.data.titulo} descricao={c.data.resumo}
+  trilha={[{ nome: 'Conteúdos', href: base }, { nome: TEMAS[c.data.tema], href: `${base}tema/${c.data.tema}/` }, { nome: c.data.titulo }]} subAtiva={base}>
+  {c.data.exemplo && <p class="aviso-exemplo"><Selo /> Este conteúdo é demonstrativo: ele mostra o layout. Substitua pelo seu.</p>}
+  <Cabecalho etiqueta={TEMAS[c.data.tema]} titulo={c.data.titulo} descricao={c.data.resumo}>
+    {c.data.data && <p class="mono" style="color:var(--texto-suave)">{formatarData(c.data.data)}</p>}
+  </Cabecalho>
+  {id && (
+    <div class="embed"><iframe src={`https://www.youtube-nocookie.com/embed/${id}`} title={c.data.titulo} loading="lazy" allowfullscreen
+      allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"></iframe></div>
+  )}
+  <div class="texto-longo"><Content /></div>
+  <p style="margin-top:32px"><a href={`${base}tema/${c.data.tema}/`}>← mais conteúdos sobre {TEMAS[c.data.tema]}</a></p>
+</Base>
+<style>
+  .embed { aspect-ratio: 16/9; max-width: 760px; margin-bottom: 28px; border-radius: 8px; overflow: hidden; background: var(--noite); }
+  .embed iframe { width: 100%; height: 100%; border: 0; }
+</style>

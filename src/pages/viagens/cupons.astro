@@ -1,0 +1,13 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Cabecalho from '../../components/Cabecalho.astro';
+import Cupom from '../../components/Cupom.astro';
+const cupons = await getCollection('cupons');
+const destinos = await getCollection('destinos');
+const nome = (slug?: string) => destinos.find((d) => d.slug === slug)?.data.titulo;
+---
+<Base area="viagens" titulo="Cupons e descontos" trilha={[{ nome: 'Cupons' }]}>
+  <Cabecalho etiqueta="viagens" titulo="Cupons e descontos" descricao="Descontos de empresas que eu uso e indico. Confira as regras de cada um no site da empresa." />
+  <div class="grade">{cupons.map((c) => <Cupom cupom={c} nomeDestino={nome(c.data.destino)} />)}</div>
+</Base>

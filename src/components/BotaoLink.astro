@@ -1,0 +1,15 @@
+---
+// Botão para link externo. Se o link ainda não foi preenchido, mostra um aviso no lugar.
+import Preencher from './Preencher.astro';
+import { pendente } from '../lib/util';
+interface Props { href?: string; rotulo: string; variante?: 'escuro' | 'claro'; externo?: boolean; falta?: string }
+const { href, rotulo, variante = 'escuro', externo = true, falta = 'link' } = Astro.props;
+---
+{pendente(href) ? (
+  <span class="botao botao--pendente">{rotulo} <Preencher texto={href || falta} /></span>
+) : (
+  <a class:list={['botao', variante === 'claro' && 'botao--claro']} href={href}
+     {...(externo ? { target: '_blank', rel: 'noopener sponsored' } : {})}>
+    <slot />{rotulo}{externo && <span aria-hidden="true">↗</span>}
+  </a>
+)}

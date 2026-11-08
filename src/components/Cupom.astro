@@ -1,0 +1,16 @@
+---
+import Ficha from './Ficha.astro';
+import BotaoLink from './BotaoLink.astro';
+import Texto from './Texto.astro';
+import type { CollectionEntry } from 'astro:content';
+interface Props { cupom: CollectionEntry<'cupons'>; nomeDestino?: string }
+const { cupom, nomeDestino } = Astro.props;
+const c = cupom.data;
+---
+<Ficha titulo={c.empresa} etiqueta={nomeDestino ? `cupom · ${nomeDestino}` : 'cupom'} exemplo={c.exemplo} classe="cupom">
+  <p style="margin:0 0 4px;font-weight:600"><Texto valor={c.beneficio} falta="benefício, ex.: 10% de desconto" /></p>
+  {c.codigo !== undefined && <span class="cupom__codigo"><Texto valor={c.codigo} falta="código" /></span>}
+  {c.regras && <p class="ficha__resumo">{c.regras}</p>}
+  {c.validade && <p class="ficha__resumo mono">Validade: <Texto valor={c.validade} /></p>}
+  <div class="ficha__rodape"><BotaoLink href={c.link} rotulo="Usar cupom" variante="claro" /></div>
+</Ficha>

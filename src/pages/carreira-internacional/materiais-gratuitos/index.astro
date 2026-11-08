@@ -1,0 +1,13 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Cabecalho from '../../../components/Cabecalho.astro';
+import Ficha from '../../../components/Ficha.astro';
+const materiais = await getCollection('materiais');
+---
+<Base area="carreira" titulo="Materiais gratuitos" trilha={[{ nome: 'Materiais gratuitos' }]}>
+  <Cabecalho etiqueta="carreira internacional" titulo="Materiais gratuitos" descricao="Para baixar e começar hoje." />
+  <div class="grade">
+    {materiais.map((m) => <Ficha titulo={m.data.titulo} resumo={m.data.resumo} etiqueta="gratuito" exemplo={m.data.exemplo} capa={m.data.capa ?? ''} href={`/carreira-internacional/materiais-gratuitos/${m.slug}/`} acao="ver material" />)}
+  </div>
+</Base>

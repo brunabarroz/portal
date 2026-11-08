@@ -1,0 +1,21 @@
+---
+// Cartão genérico. Com `href` o cartão inteiro vira link.
+import Selo from './Selo.astro';
+interface Props {
+  titulo: string; resumo?: string; href?: string; etiqueta?: string; exemplo?: boolean;
+  capa?: string; acao?: string; externo?: boolean; orelha?: string; classe?: string;
+}
+const { titulo, resumo, href, etiqueta, exemplo, capa, acao = 'abrir', externo, orelha, classe } = Astro.props;
+const temCapa = capa !== undefined;
+---
+<article class:list={['ficha', orelha && 'ficha--orelha', classe]} data-orelha={orelha}>
+  {temCapa && (capa ? <img class="ficha__capa" src={capa} alt="" loading="lazy" /> : <div class="ficha__capa ficha__capa--vazia">imagem</div>)}
+  {(etiqueta || exemplo) && <div class="ficha__etiqueta">{etiqueta && <span>{etiqueta}</span>}{exemplo && <Selo />}</div>}
+  <h3>
+    {href ? <a class="ficha__link" href={href} style="color:inherit;text-decoration:none"
+      {...(externo ? { target: '_blank', rel: 'noopener sponsored' } : {})}>{titulo}</a> : titulo}
+  </h3>
+  {resumo && <p class="ficha__resumo">{resumo}</p>}
+  <slot />
+  {href && <div class="ficha__rodape"><span class="ficha__acao">{acao}</span></div>}
+</article>

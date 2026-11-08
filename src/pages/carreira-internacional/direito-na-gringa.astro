@@ -1,0 +1,55 @@
+---
+// Página do curso Direito na Gringa. O pagamento acontece na Hotmart.
+import Base from '../../layouts/Base.astro';
+import Cabecalho from '../../components/Cabecalho.astro';
+import Texto from '../../components/Texto.astro';
+import BotaoLink from '../../components/BotaoLink.astro';
+import { pendente } from '../../lib/util';
+import curso from '../../data/curso.json';
+---
+<Base area="carreira" titulo={curso.nome} trilha={[{ nome: curso.nome }]} descricao={pendente(curso.chamada) ? undefined : curso.chamada}>
+  <Cabecalho etiqueta="meu curso" titulo={curso.nome}>
+    <p class="cabecalho__descricao"><Texto valor={curso.chamada} /></p>
+  </Cabecalho>
+
+  <div class="curso">
+    <div class="texto-longo">
+      <p><Texto valor={curso.descricao} /></p>
+
+      <h2>Para quem é</h2>
+      <ul>{curso.paraQuem.map((p) => <li><Texto valor={p} /></li>)}</ul>
+
+      <h2>O que você vai encontrar</h2>
+      <ol class="modulos">
+        {curso.modulos.map((m, i) => (
+          <li>
+            <span class="modulos__num mono">módulo {String(i + 1).padStart(2, '0')}</span>
+            <strong><Texto valor={m.titulo} /></strong>
+            {m.descricao && <p>{m.descricao}</p>}
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <aside class="curso__cartao" aria-label="Acessar o curso">
+      <span class="mono">inscrição</span>
+      <p>A inscrição e o pagamento são feitos na Hotmart.</p>
+      <BotaoLink href={curso.linkHotmart} rotulo={curso.textoBotao} falta="link da Hotmart" />
+    </aside>
+  </div>
+</Base>
+
+<style>
+  .curso { display: grid; grid-template-columns: 1fr 300px; gap: 40px; align-items: start; }
+  .curso__cartao {
+    position: sticky; top: 24px;
+    background: var(--area-suave); border: 1.5px solid var(--area); border-radius: 4px 14px 14px 14px;
+    padding: 22px; display: grid; gap: 10px;
+  }
+  .curso__cartao p { margin: 0; color: var(--texto-suave); }
+  .modulos { list-style: none; padding: 0 !important; display: grid; gap: 10px; }
+  .modulos li { background: #fff; border: 1.5px solid var(--linha); border-left: 6px solid var(--area); border-radius: 6px; padding: 12px 16px; display: grid; gap: 2px; }
+  .modulos li p { margin: 4px 0 0; color: var(--texto-suave); font-size: .95rem; }
+  .modulos__num { color: var(--area-forte); }
+  @media (max-width: 860px) { .curso { grid-template-columns: 1fr; } .curso__cartao { position: static; } }
+</style>

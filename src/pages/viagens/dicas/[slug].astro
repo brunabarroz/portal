@@ -1,0 +1,23 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Cabecalho from '../../../components/Cabecalho.astro';
+import Selo from '../../../components/Selo.astro';
+import { formatarData } from '../../../lib/util';
+export async function getStaticPaths() {
+  return (await getCollection('dicas')).map((t) => ({ params: { slug: t.slug }, props: { t } }));
+}
+const { t } = Astro.props;
+const { Content } = await t.render();
+const destino = t.data.destino ? (await getCollection('destinos')).find((d) => d.slug === t.data.destino) : undefined;
+const base = '/viagens/dicas/';
+---
+<Base area="viagens" titulo={t.data.titulo} descricao={t.data.resumo} trilha={[{ nome: 'Dicas', href: base }, { nome: t.data.titulo }]} subAtiva={base}>
+  {t.data.exemplo && <p class="aviso-exemplo"><Selo /> Dica demonstrativa, para visualizar o layout.</p>}
+  <Cabecalho etiqueta={destino ? `dica · ${destino.data.titulo}` : 'dica de viagem'} titulo={t.data.titulo} descricao={t.data.resumo}>
+    {t.data.data && <p class="mono" style="color:var(--texto-suave)">{formatarData(t.data.data)}</p>}
+  </Cabecalho>
+  {t.data.capa && <img src={t.data.capa} alt="" style="border-radius:6px;margin-bottom:28px;max-height:420px;width:100%;object-fit:cover" />}
+  <div class="texto-longo"><Content /></div>
+  {destino && <p style="margin-top:32px"><a class="botao botao--claro" href={`/viagens/destinos/${destino.slug}/`}>Ver tudo sobre {destino.data.titulo} →</a></p>}
+</Base>

@@ -1,0 +1,226 @@
+# Painel de edição do site (Decap CMS) — abre em  seusite.com/admin
+# Depois de criar o repositório no GitHub, troque a linha "repo" abaixo.
+backend:
+  name: github
+  repo: brunabarroz/portal
+  branch: main
+
+local_backend: true   # permite testar o painel no computador (npm run painel-local)
+locale: pt
+media_folder: public/uploads
+public_folder: /uploads
+slug: { encoding: ascii, clean_accents: true }
+
+collections:
+  # ============ MEU PERFIL E CURSO ============
+  - name: configuracoes
+    label: "⚙️ Meu perfil e curso"
+    files:
+      - name: perfil
+        label: "Meu perfil (página Bruna Barros)"
+        file: src/data/perfil.json
+        fields:
+          - { label: Nome, name: nome, widget: string }
+          - { label: "Saudação (título da página inicial)", name: saudacao, widget: string }
+          - { label: "Linha de apoio (abaixo do título)", name: linhaApoio, widget: string }
+          - { label: "Apresentação curta (2 a 4 frases)", name: bio, widget: text }
+          - { label: Foto, name: foto, widget: image, required: false }
+          - { label: "Descrição da foto (acessibilidade)", name: fotoDescricao, widget: string }
+          - label: Redes sociais
+            name: redes
+            widget: list
+            fields:
+              - { label: "Rede", name: rede, widget: select, options: [YouTube, TikTok, Instagram, LinkedIn] }
+              - { label: Link, name: url, widget: string }
+              - { label: "Botão grande em destaque?", name: destaque, widget: boolean, default: false }
+      - name: curso
+        label: "Curso Direito na Gringa"
+        file: src/data/curso.json
+        fields:
+          - { label: Nome do curso, name: nome, widget: string }
+          - { label: "Chamada (uma frase)", name: chamada, widget: string }
+          - { label: Apresentação, name: descricao, widget: text }
+          - { label: "Para quem é", name: paraQuem, widget: list, field: { label: Item, name: item, widget: string } }
+          - label: Módulos
+            name: modulos
+            widget: list
+            fields:
+              - { label: Título, name: titulo, widget: string }
+              - { label: "Descrição (opcional)", name: descricao, widget: text, required: false }
+          - { label: "Link da página na Hotmart", name: linkHotmart, widget: string }
+          - { label: Texto do botão, name: textoBotao, widget: string }
+          - { label: "Imagem (opcional)", name: imagem, widget: image, required: false }
+
+  # ============ VIAGENS ============
+  - name: destinos
+    label: "✈️ Viagens · Destinos e roteiros"
+    label_singular: destino
+    folder: src/content/destinos
+    create: true
+    identifier_field: titulo
+    summary: "{{titulo}} ({{pais}})"
+    fields:
+      - { label: Nome do destino, name: titulo, widget: string }
+      - { label: País, name: pais, widget: string, required: false }
+      - { label: "Sigla do carimbo (ex.: BCN)", name: sigla, widget: string, required: false }
+      - { label: Resumo curto, name: resumo, widget: text, required: false }
+      - { label: Foto de capa, name: capa, widget: image, required: false }
+      - { label: "Ordem (1 aparece primeiro)", name: ordem, widget: number, default: 100, value_type: int }
+      - &exemplo { label: "É conteúdo de exemplo? (desmarque quando for real)", name: exemplo, widget: boolean, default: false, required: false }
+      - { label: "Roteiro (deixe vazio se ainda não tiver)", name: body, widget: markdown, required: false }
+
+  - name: dicas
+    label: "✈️ Viagens · Dicas"
+    label_singular: dica
+    folder: src/content/dicas
+    create: true
+    identifier_field: titulo
+    fields:
+      - { label: Título, name: titulo, widget: string }
+      - { label: Resumo, name: resumo, widget: text, required: false }
+      - &destino
+        label: "Destino (opcional) — liga este item à página do destino"
+        name: destino
+        widget: relation
+        collection: destinos
+        value_field: "{{slug}}"
+        search_fields: [titulo]
+        display_fields: [titulo]
+        required: false
+      - { label: Imagem, name: capa, widget: image, required: false }
+      - { label: Data, name: data, widget: datetime, time_format: false, date_format: "DD/MM/YYYY", format: "YYYY-MM-DD", required: false }
+      - *exemplo
+      - { label: Texto, name: body, widget: markdown }
+
+  - name: videos
+    label: "✈️ Viagens · Vídeos do YouTube"
+    label_singular: vídeo
+    folder: src/content/videos
+    extension: yml
+    format: yml
+    create: true
+    identifier_field: titulo
+    fields:
+      - { label: Título, name: titulo, widget: string }
+      - { label: "Link do vídeo no YouTube", name: youtube, widget: string }
+      - *destino
+      - { label: Data, name: data, widget: datetime, time_format: false, date_format: "DD/MM/YYYY", format: "YYYY-MM-DD", required: false }
+      - *exemplo
+
+  - name: cupons
+    label: "✈️ Viagens · Cupons"
+    label_singular: cupom
+    folder: src/content/cupons
+    extension: yml
+    format: yml
+    create: true
+    identifier_field: empresa
+    fields:
+      - { label: Empresa, name: empresa, widget: string }
+      - { label: "Benefício (ex.: 10% de desconto)", name: beneficio, widget: string }
+      - { label: "Código do cupom (opcional)", name: codigo, widget: string, required: false }
+      - { label: "Validade (opcional)", name: validade, widget: string, required: false }
+      - { label: "Regras ou observações (opcional)", name: regras, widget: text, required: false }
+      - { label: Link, name: link, widget: string }
+      - *destino
+      - *exemplo
+
+  - name: hospedagens
+    label: "✈️ Viagens · Hospedagens e serviços"
+    label_singular: indicação
+    folder: src/content/hospedagens
+    extension: yml
+    format: yml
+    create: true
+    identifier_field: nome
+    fields:
+      - { label: Nome, name: nome, widget: string }
+      - { label: Tipo, name: tipo, widget: select, options: [Hospedagem, Serviço], default: Hospedagem }
+      - { label: "Por que você recomenda", name: descricao, widget: text }
+      - { label: Link, name: link, widget: string }
+      - *destino
+      - *exemplo
+
+  - name: equipamentos
+    label: "✈️ Viagens · Equipamentos e produtos"
+    label_singular: produto
+    folder: src/content/equipamentos
+    extension: yml
+    format: yml
+    create: true
+    identifier_field: nome
+    fields:
+      - { label: Nome do produto, name: nome, widget: string }
+      - { label: "Categoria (ex.: Mochilas)", name: categoria, widget: string }
+      - { label: "Por que você usa", name: descricao, widget: text }
+      - { label: Foto, name: imagem, widget: image, required: false }
+      - { label: Link de compra, name: link, widget: string }
+      - *exemplo
+
+  # ============ CARREIRA INTERNACIONAL ============
+  - name: guias
+    label: "💼 Carreira · Guias e e-books"
+    label_singular: guia
+    folder: src/content/guias
+    create: true
+    identifier_field: titulo
+    fields:
+      - { label: Título, name: titulo, widget: string }
+      - { label: Formato, name: formato, widget: select, options: [Guia, E-book], default: Guia }
+      - { label: Resumo, name: resumo, widget: text }
+      - { label: Capa, name: capa, widget: image, required: false }
+      - { label: "Link de compra ou download", name: link, widget: string }
+      - { label: Texto do botão, name: textoBotao, widget: string, default: "Quero o guia" }
+      - *exemplo
+      - { label: Apresentação completa, name: body, widget: markdown }
+
+  - name: materiais
+    label: "💼 Carreira · Materiais gratuitos"
+    label_singular: material
+    folder: src/content/materiais
+    create: true
+    identifier_field: titulo
+    fields:
+      - { label: Título, name: titulo, widget: string }
+      - { label: Resumo, name: resumo, widget: text }
+      - { label: Capa, name: capa, widget: image, required: false }
+      - { label: Link para baixar, name: link, widget: string }
+      - *exemplo
+      - { label: Descrição, name: body, widget: markdown }
+
+  - name: ferramentas
+    label: "💼 Carreira · Ferramentas e indicações"
+    label_singular: ferramenta
+    folder: src/content/ferramentas
+    extension: yml
+    format: yml
+    create: true
+    identifier_field: nome
+    fields:
+      - { label: Nome, name: nome, widget: string }
+      - { label: "Categoria (ex.: Currículo, Idiomas)", name: categoria, widget: string }
+      - { label: "Para que serve / por que indica", name: descricao, widget: text }
+      - { label: Link, name: link, widget: string }
+      - *exemplo
+
+  - name: conteudos
+    label: "💼 Carreira · Conteúdos (LinkedIn, currículo, vagas, entrevistas)"
+    label_singular: conteúdo
+    folder: src/content/conteudos
+    create: true
+    identifier_field: titulo
+    fields:
+      - { label: Título, name: titulo, widget: string }
+      - label: Tema
+        name: tema
+        widget: select
+        options:
+          - { label: LinkedIn, value: linkedin }
+          - { label: Currículo, value: curriculo }
+          - { label: Busca de vagas, value: vagas }
+          - { label: Entrevistas, value: entrevistas }
+      - { label: Resumo, name: resumo, widget: text }
+      - { label: "Vídeo do YouTube (opcional)", name: youtube, widget: string, required: false }
+      - { label: Data, name: data, widget: datetime, time_format: false, date_format: "DD/MM/YYYY", format: "YYYY-MM-DD", required: false }
+      - *exemplo
+      - { label: Texto, name: body, widget: markdown }

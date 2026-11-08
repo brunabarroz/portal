@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Cabecalho from '../../../components/Cabecalho.astro';
+import BotaoLink from '../../../components/BotaoLink.astro';
+import Selo from '../../../components/Selo.astro';
+export async function getStaticPaths() {
+  return (await getCollection('guias')).map((g) => ({ params: { slug: g.slug }, props: { g } }));
+}
+const { g } = Astro.props;
+const { Content } = await g.render();
+const base = '/carreira-internacional/guias-e-ebooks/';
+---
+<Base area="carreira" titulo={g.data.titulo} descricao={g.data.resumo} trilha={[{ nome: 'Guias e e-books', href: base }, { nome: g.data.titulo }]} subAtiva={base}>
+  {g.data.exemplo && <p class="aviso-exemplo"><Selo /> Este guia é demonstrativo: ele mostra o layout. Substitua pelo seu.</p>}
+  <Cabecalho etiqueta={g.data.formato} titulo={g.data.titulo} descricao={g.data.resumo} />
+  <div class="recurso">
+    {g.data.capa && <img class="recurso__capa" src={g.data.capa} alt={`Capa de ${g.data.titulo}`} />}
+    <div class="texto-longo"><Content /></div>
+  </div>
+  <p style="margin-top:28px"><BotaoLink href={g.data.link} rotulo={g.data.textoBotao ?? 'Acessar'} falta="link de compra ou download" /></p>
+</Base>
+<style>
+  .recurso { display: grid; grid-template-columns: auto 1fr; gap: 32px; align-items: start; }
+  .recurso__capa { width: 220px; border-radius: 4px; box-shadow: var(--sombra); }
+  @media (max-width: 700px) { .recurso { grid-template-columns: 1fr; } }
+</style>

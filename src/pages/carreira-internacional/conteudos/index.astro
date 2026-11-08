@@ -1,0 +1,12 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Cabecalho from '../../../components/Cabecalho.astro';
+import ListaConteudos from '../../../components/ListaConteudos.astro';
+import { porData } from '../../../lib/util';
+const itens = (await getCollection('conteudos')).sort(porData);
+---
+<Base area="carreira" titulo="Conteúdos" trilha={[{ nome: 'Conteúdos' }]}>
+  <Cabecalho etiqueta="carreira internacional" titulo="Conteúdos" descricao="LinkedIn, currículo, busca de vagas e entrevistas. Filtre por tema." />
+  <ListaConteudos itens={itens} />
+</Base>

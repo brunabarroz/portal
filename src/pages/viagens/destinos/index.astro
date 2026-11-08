@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Cabecalho from '../../../components/Cabecalho.astro';
+import CartaoDestino from '../../../components/CartaoDestino.astro';
+const destinos = (await getCollection('destinos')).sort((a, b) => a.data.ordem - b.data.ordem);
+const paises = [...new Set(destinos.map((d) => d.data.pais ?? 'Outros'))];
+---
+<Base area="viagens" titulo="Destinos" trilha={[{ nome: 'Destinos' }]}>
+  <Cabecalho etiqueta="viagens" titulo="Destinos" descricao="Cada destino reúne roteiro, dicas, vídeos, hospedagens e cupons daquele lugar." />
+  {paises.map((p) => (
+    <section class="secao">
+      <h2>{p}</h2>
+      <div class="grade grade--3">{destinos.filter((d) => (d.data.pais ?? 'Outros') === p).map((d) => <CartaoDestino d={d} />)}</div>
+    </section>
+  ))}
+</Base>

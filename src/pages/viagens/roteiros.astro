@@ -1,0 +1,14 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Cabecalho from '../../components/Cabecalho.astro';
+import Ficha from '../../components/Ficha.astro';
+import { temRoteiro } from '../../lib/estrutura';
+const comRoteiro = (await getCollection('destinos')).filter(temRoteiro).sort((a, b) => a.data.ordem - b.data.ordem);
+---
+<Base area="viagens" titulo="Roteiros" trilha={[{ nome: 'Roteiros' }]}>
+  <Cabecalho etiqueta="viagens" titulo="Roteiros" descricao="Escolha um destino para abrir o roteiro completo, com dicas e conteúdos relacionados." />
+  <div class="grade grade--3">
+    {comRoteiro.map((d) => <Ficha titulo={`Roteiro: ${d.data.titulo}`} resumo={d.data.resumo} etiqueta={d.data.pais} exemplo={d.data.exemplo} href={`/viagens/destinos/${d.slug}/#roteiro`} acao="abrir roteiro" />)}
+  </div>
+</Base>

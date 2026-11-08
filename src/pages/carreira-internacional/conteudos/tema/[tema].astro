@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../../layouts/Base.astro';
+import Cabecalho from '../../../../components/Cabecalho.astro';
+import ListaConteudos from '../../../../components/ListaConteudos.astro';
+import { TEMAS, type TemaId } from '../../../../lib/estrutura';
+import { porData } from '../../../../lib/util';
+export async function getStaticPaths() {
+  const todos = await getCollection('conteudos');
+  return (Object.keys(TEMAS) as TemaId[])
+    .filter((t) => todos.some((c) => c.data.tema === t))
+    .map((t) => ({ params: { tema: t }, props: { tema: t } }));
+}
+const { tema } = Astro.props as { tema: TemaId };
+const itens = (await getCollection('conteudos')).filter((c) => c.data.tema === tema).sort(porData);
+const base = '/carreira-internacional/conteudos/';
+---
+<Base area="carreira" titulo={`Conteúdos · ${TEMAS[tema]}`} trilha={[{ nome: 'Conteúdos', href: base }, { nome: TEMAS[tema] }]} subAtiva={base}>
+  <Cabecalho etiqueta="conteúdos por tema" titulo={TEMAS[tema]} />
+  <ListaConteudos itens={itens} temaAtivo={tema} />
+</Base>

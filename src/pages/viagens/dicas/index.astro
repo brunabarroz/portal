@@ -1,0 +1,16 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Cabecalho from '../../../components/Cabecalho.astro';
+import Ficha from '../../../components/Ficha.astro';
+import { porData } from '../../../lib/util';
+const dicas = (await getCollection('dicas')).sort(porData);
+const destinos = await getCollection('destinos');
+const nome = (slug?: string) => destinos.find((d) => d.slug === slug)?.data.titulo;
+---
+<Base area="viagens" titulo="Dicas de viagem" trilha={[{ nome: 'Dicas' }]}>
+  <Cabecalho etiqueta="viagens" titulo="Dicas de viagem" descricao="Dicas gerais e dicas de cada destino." />
+  <div class="grade">
+    {dicas.map((t) => <Ficha titulo={t.data.titulo} resumo={t.data.resumo} etiqueta={nome(t.data.destino) ?? 'dica geral'} exemplo={t.data.exemplo} capa={t.data.capa} href={`/viagens/dicas/${t.slug}/`} acao="ler dica" />)}
+  </div>
+</Base>

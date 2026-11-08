@@ -1,0 +1,8 @@
+---
+// Mostra um texto, ou o marcador [PREENCHER] quando ainda não foi preenchido.
+import Preencher from './Preencher.astro';
+import { pendente } from '../lib/util';
+interface Props { valor?: string; falta?: string }
+const { valor, falta = '' } = Astro.props;
+---
+{pendente(valor) ? <Preencher texto={valor || falta} /> : <Fragment set:text={valor} />}

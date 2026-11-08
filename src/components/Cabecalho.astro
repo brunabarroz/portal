@@ -1,0 +1,16 @@
+---
+// Título da página. Palavras entre *asteriscos* aparecem em letra cursiva.
+// `hero` = versão centralizada com faixa suave e ornamento (páginas de entrada).
+import Ornamento from './Ornamento.astro';
+interface Props { etiqueta: string; titulo: string; descricao?: string; hero?: boolean }
+const { etiqueta, titulo, descricao, hero = false } = Astro.props;
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const html = esc(titulo).replace(/\*([^*]+)\*/g, '<span class="script">$1</span>');
+---
+<header class:list={['cabecalho', hero && 'cabecalho--hero']}>
+  {hero && <Ornamento tipo="sol" />}
+  <span class="etiqueta">{etiqueta}</span>
+  <h1 set:html={html} />
+  {descricao && <p class="cabecalho__descricao">{descricao}</p>}
+  <slot />
+</header>

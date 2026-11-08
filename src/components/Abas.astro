@@ -1,0 +1,68 @@
+---
+// Navegação principal: pastas empilhadas na lateral (computador)
+// e abas de pasta fixas embaixo (celular).
+import { getCollection } from 'astro:content';
+import { AREAS, ORDEM_AREAS, type AreaId } from '../lib/estrutura';
+import { pendente } from '../lib/util';
+import Clipe from './Clipe.astro';
+import perfil from '../data/perfil.json';
+import curso from '../data/curso.json';
+interface Props { area: AreaId; naEntrada: boolean }
+const { area, naEntrada } = Astro.props;
+const atual = (id: AreaId) => (id === area ? (naEntrada ? 'page' : 'location') : undefined);
+const destino = (await getCollection('destinos')).sort((a, b) => a.data.ordem - b.data.ordem)[0];
+const lado: Record<AreaId, string> = { bruna: '', carreira: 'pasta-l--direita', viagens: '' };
+---
+<aside class="lateral">
+  <a class="lateral__marca" href="/" aria-label="Bruna Barros — página inicial">
+    <span class="lateral__nome">Bruna Barros</span>
+    <span class="lateral__sub">carreira internacional · viagens</span>
+  </a>
+  <nav aria-label="Áreas do site">
+    <ul class="pastas">
+      {ORDEM_AREAS.map((id) => (
+        <li>
+          <a class:list={['pasta-l', `pasta-l--${id}`, lado[id]]} href={AREAS[id].href} aria-current={atual(id)}>
+            <span class="pasta-l__aba">{AREAS[id].numero} · {AREAS[id].curto}</span>
+            <span class="pasta-l__corpo">
+              {id === 'bruna' && (<>
+                <span class="pasta-l__enfeite polaroid" aria-hidden="true">{pendente(perfil.foto) ? <span /> : <img src={perfil.foto} alt="" />}</span>
+                <Clipe estilo="right:34px" />
+              </>)}
+              {id === 'carreira' && (<>
+                <span class="pasta-l__enfeite bilhete" aria-hidden="true"><small>meu curso</small><strong>{curso.nome}</strong></span>
+                <Clipe tipo="prendedor" estilo="left:60px;top:-22px" />
+              </>)}
+              {id === 'viagens' && (<>
+                <span class="pasta-l__enfeite cartao-postal" aria-hidden="true"><b>{destino?.data.sigla ?? '✈'}</b><i>{destino ? destino.data.titulo : 'próximo destino'}</i></span>
+                <Clipe estilo="right:40px" />
+              </>)}
+              <span class="pasta-l__itens">
+                <span class="pasta-l__aqui">você está aqui</span>
+                <span class="pasta-l__nome">{AREAS[id].nome}</span>
+                {AREAS[id].itens.join(' · ')}
+              </span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+  <p class="lateral__rodape">© {new Date().getFullYear()} Bruna Barros</p>
+</aside>
+
+<header class="topo-mobile">
+  <a href="/"><span class="lateral__nome">Bruna Barros</span></a>
+</header>
+<nav class="barra-mobile" aria-label="Áreas do site">
+  <ul>
+    {ORDEM_AREAS.map((id) => (
+      <li>
+        <a class={`cor-${id}`} href={AREAS[id].href} aria-current={atual(id)}>
+          <span class="barra-mobile__aqui" aria-hidden="true">você está aqui</span>
+          <span class="barra-mobile__nome">{AREAS[id].curto}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
