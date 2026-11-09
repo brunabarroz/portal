@@ -8,7 +8,7 @@ import Texto from '../../components/Texto.astro';
 import Ornamento from '../../components/Ornamento.astro';
 import { TEMAS, subAbas } from '../../lib/estrutura';
 import { porData } from '../../lib/util';
-import curso from '../../data/curso.json';
+import { curso } from '../../lib/dados';
 
 const categorias = (await subAbas('carreira')).filter((s) => s.quantidade !== null);
 const guias = await getCollection('guias');

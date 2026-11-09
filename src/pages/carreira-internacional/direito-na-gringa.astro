@@ -5,7 +5,7 @@ import Cabecalho from '../../components/Cabecalho.astro';
 import Texto from '../../components/Texto.astro';
 import BotaoLink from '../../components/BotaoLink.astro';
 import { pendente } from '../../lib/util';
-import curso from '../../data/curso.json';
+import { curso, paragrafos } from '../../lib/dados';
 ---
 <Base area="carreira" titulo={curso.nome} trilha={[{ nome: curso.nome }]} descricao={pendente(curso.chamada) ? undefined : curso.chamada}>
   <Cabecalho etiqueta="meu curso" titulo={curso.nome}>
@@ -14,11 +14,16 @@ import curso from '../../data/curso.json';
 
   <div class="curso">
     <div class="texto-longo">
-      <p><Texto valor={curso.descricao} /></p>
+      {pendente(curso.descricao)
+        ? <p><Texto valor={curso.descricao} falta="apresentação do curso" /></p>
+        : paragrafos(curso.descricao).map((t) => <p>{t}</p>)}
 
-      <h2>Para quem é</h2>
-      <ul>{curso.paraQuem.map((p) => <li><Texto valor={p} /></li>)}</ul>
+      {curso.paraQuem.length > 0 && (<>
+        <h2>Para quem é</h2>
+        <ul>{curso.paraQuem.map((p) => <li><Texto valor={p} /></li>)}</ul>
+      </>)}
 
+      {curso.modulos.length > 0 && (<>
       <h2>O que você vai encontrar</h2>
       <ol class="modulos">
         {curso.modulos.map((m, i) => (
@@ -29,6 +34,7 @@ import curso from '../../data/curso.json';
           </li>
         ))}
       </ol>
+      </>)}
     </div>
 
     <aside class="curso__cartao" aria-label="Acessar o curso">

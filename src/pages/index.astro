@@ -10,7 +10,7 @@ import Ornamento from '../components/Ornamento.astro';
 import Clipe from '../components/Clipe.astro';
 import { AREAS, subAbas } from '../lib/estrutura';
 import { pendente } from '../lib/util';
-import perfil from '../data/perfil.json';
+import { perfil } from '../lib/dados';
 
 const destaque = perfil.redes.filter((r) => r.destaque);
 const outrasRedes = perfil.redes.filter((r) => !r.destaque);

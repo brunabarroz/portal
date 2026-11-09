@@ -5,8 +5,7 @@ import { getCollection } from 'astro:content';
 import { AREAS, ORDEM_AREAS, type AreaId } from '../lib/estrutura';
 import { pendente } from '../lib/util';
 import Clipe from './Clipe.astro';
-import perfil from '../data/perfil.json';
-import curso from '../data/curso.json';
+import { perfil, curso } from '../lib/dados';
 interface Props { area: AreaId; naEntrada: boolean }
 const { area, naEntrada } = Astro.props;
 const atual = (id: AreaId) => (id === area ? (naEntrada ? 'page' : 'location') : undefined);
