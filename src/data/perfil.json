@@ -3,12 +3,27 @@
   "saudacao": "Oi, eu sou a Bruna.",
   "linhaApoio": "Carreira internacional e viagens de mochila.",
   "bio": "[PREENCHER: sua apresentação curta, de 2 a 4 frases, contando quem você é, o que compartilha e para quem é este espaço]",
-  "foto": "",
   "fotoDescricao": "Foto da Bruna Barros",
   "redes": [
-    { "rede": "YouTube", "url": "[PREENCHER: link do seu canal no YouTube]", "destaque": true },
-    { "rede": "TikTok", "url": "[PREENCHER: link do seu perfil no TikTok]", "destaque": true },
-    { "rede": "Instagram", "url": "[PREENCHER: link do seu Instagram]", "destaque": false },
-    { "rede": "LinkedIn", "url": "[PREENCHER: link do seu LinkedIn]", "destaque": false }
+    {
+      "rede": "YouTube",
+      "url": "https://www.youtube.com/@BrunaBarroz",
+      "destaque": true
+    },
+    {
+      "rede": "TikTok",
+      "url": "https://www.tiktok.com/@brunabarroz",
+      "destaque": true
+    },
+    {
+      "rede": "Instagram",
+      "url": "https://www.instagram.com/brunabarroz",
+      "destaque": false
+    },
+    {
+      "rede": "LinkedIn",
+      "url": "https://www.linkedin.com/in/abrunabarros/",
+      "destaque": false
+    }
   ]
 }
