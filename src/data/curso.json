@@ -1,18 +1,13 @@
 {
   "nome": "Direito na Gringa",
-  "chamada": "[PREENCHER: uma frase que resume o curso]",
-  "descricao": "[PREENCHER: apresentação do curso, com 1 ou 2 parágrafos explicando o que a pessoa vai aprender]",
+  "chamada": "oi advogada, quer trabalhar pra empresas internacionais, ganhar em dólar e não sabe por onde começar? eu te ensino o passo a passo! 💌",
+  "descricao": "Se você tem vontade de trabalhar pra empresas ou escritórios internacionais, mas não faz ideia de onde começar, esse curso é pra você!\n\nQuando comecei a procurar vagas internacionais, eu também não tinha experiência na área e precisei descobrir sozinha onde encontrar essas oportunidades, como montar meu LinkedIn, preparar meu currículo e me candidatar.\n\nPor isso, reuni nesse curso tudo que fiz pra conseguir minhas oportunidades internacionais e organizei em um passo a passo pra você conseguir aplicar também.\n\nVou te ensinar desde como descobrir as áreas em que você pode trabalhar, encontrar vagas que fazem sentido pro seu perfil e melhorar seu LinkedIn até como abordar recrutadores e se preparar pras entrevistas. E pra facilitar, também preparei modelos, materiais de apoio e exercícios pra você colocar tudo em prática!",
   "paraQuem": [
-    "[PREENCHER: perfil de quem deve fazer o curso — item 1]",
-    "[PREENCHER: perfil de quem deve fazer o curso — item 2]",
-    "[PREENCHER: perfil de quem deve fazer o curso — item 3]"
+    "pra quem é estudante ou formado em Direito e quer começar a buscar oportunidades internacionais",
+    "pra quem quer trabalhar remoto, ganhar em dólar e ter a liberdade de trabalhar de qualquer lugar",
+    "pra quem não tem experiência internacional e nem sabe por onde começar",
+    "pra quem já procura vagas internacionais, mas não sabe se o LinkedIn, o currículo e a forma de se candidatar estão certos"
   ],
-  "modulos": [
-    { "titulo": "[PREENCHER: módulo 1]", "descricao": "" },
-    { "titulo": "[PREENCHER: módulo 2]", "descricao": "" },
-    { "titulo": "[PREENCHER: módulo 3]", "descricao": "" }
-  ],
-  "linkHotmart": "[PREENCHER: link da página do curso na Hotmart]",
-  "textoBotao": "Conhecer o curso na Hotmart",
-  "imagem": ""
+  "linkHotmart": "https://go.hotmart.com/T107829842K",
+  "textoBotao": "Conhecer o curso!"
 }
