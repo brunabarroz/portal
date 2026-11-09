@@ -1,0 +1,238 @@
+# Painel de edição do site (Pages CMS) — acesse em https://app.pagescms.org
+# Cada item abaixo vira uma seção do painel, com formulários em português.
+
+media:
+  input: public/uploads
+  output: /uploads
+
+content:
+  # ================= MEU PERFIL E CURSO =================
+  - name: perfil
+    label: "Meu perfil (página Bruna Barros)"
+    type: file
+    path: src/data/perfil.json
+    format: json
+    fields:
+      - { name: nome, label: "Nome", type: string, required: true }
+      - { name: saudacao, label: "Frase em letra cursiva (título da página inicial)", type: string, required: true }
+      - { name: linhaApoio, label: "Linha de apoio (abaixo do nome)", type: string }
+      - { name: bio, label: "Apresentação curta (2 a 4 frases)", type: text }
+      - { name: foto, label: "Sua foto", type: image }
+      - { name: fotoDescricao, label: "Descrição da foto (para leitores de tela)", type: string }
+      - name: redes
+        label: "Redes sociais"
+        type: object
+        list: true
+        fields:
+          - name: rede
+            label: "Rede"
+            type: select
+            options: { values: [YouTube, TikTok, Instagram, LinkedIn] }
+          - { name: url, label: "Link", type: string }
+          - { name: destaque, label: "Botão grande em destaque?", type: boolean }
+
+  - name: curso
+    label: "Curso Direito na Gringa"
+    type: file
+    path: src/data/curso.json
+    format: json
+    fields:
+      - { name: nome, label: "Nome do curso", type: string, required: true }
+      - { name: chamada, label: "Chamada (uma frase)", type: string }
+      - { name: descricao, label: "Apresentação do curso", type: text }
+      - { name: paraQuem, label: "Para quem é (um item por linha)", type: string, list: true }
+      - name: modulos
+        label: "Módulos"
+        type: object
+        list: true
+        fields:
+          - { name: titulo, label: "Título do módulo", type: string }
+          - { name: descricao, label: "Descrição (opcional)", type: text }
+      - { name: linkHotmart, label: "Link da página do curso na Hotmart", type: string }
+      - { name: textoBotao, label: "Texto do botão", type: string }
+      - { name: imagem, label: "Imagem (opcional)", type: image }
+
+  # ================= VIAGENS =================
+  - name: destinos
+    label: "Viagens · Destinos e roteiros"
+    type: collection
+    path: src/content/destinos
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view: { primary: titulo, fields: [titulo, pais], sort: [ordem, titulo] }
+    fields:
+      - { name: titulo, label: "Nome do destino", type: string, required: true }
+      - { name: pais, label: "País", type: string }
+      - { name: sigla, label: "Sigla do carimbo (ex.: BCN)", type: string }
+      - { name: resumo, label: "Resumo curto", type: text }
+      - { name: capa, label: "Foto de capa", type: image }
+      - { name: ordem, label: "Ordem (1 aparece primeiro)", type: number, default: 100 }
+      - { name: exemplo, label: "É conteúdo de exemplo? (desmarque quando for real)", type: boolean, default: false }
+      - { name: body, label: "Roteiro (deixe vazio se ainda não tiver)", type: rich-text, options: { format: markdown } }
+
+  - name: dicas
+    label: "Viagens · Dicas"
+    type: collection
+    path: src/content/dicas
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view: { primary: titulo, sort: data, order: desc }
+    fields:
+      - { name: titulo, label: "Título", type: string, required: true }
+      - { name: resumo, label: "Resumo", type: text }
+      - name: destino
+        label: "Destino (opcional) — liga a dica à página do destino"
+        type: reference
+        options: { collection: destinos, search: titulo, value: "{path}", label: "{titulo}" }
+      - { name: capa, label: "Imagem", type: image }
+      - { name: data, label: "Data", type: date, default: "", options: { format: yyyy-MM-dd } }
+      - { name: exemplo, label: "É conteúdo de exemplo? (desmarque quando for real)", type: boolean, default: false }
+      - { name: body, label: "Texto", type: rich-text, options: { format: markdown } }
+
+  - name: videos
+    label: "Viagens · Vídeos do YouTube"
+    type: collection
+    path: src/content/videos
+    format: yaml
+    filename: "{primary}.yml"
+    view: { primary: titulo, sort: data, order: desc }
+    fields:
+      - { name: titulo, label: "Título", type: string, required: true }
+      - { name: youtube, label: "Link do vídeo no YouTube", type: string }
+      - name: destino
+        label: "Destino (opcional)"
+        type: reference
+        options: { collection: destinos, search: titulo, value: "{path}", label: "{titulo}" }
+      - { name: data, label: "Data", type: date, default: "", options: { format: yyyy-MM-dd } }
+      - { name: exemplo, label: "É conteúdo de exemplo? (desmarque quando for real)", type: boolean, default: false }
+
+  - name: cupons
+    label: "Viagens · Cupons"
+    type: collection
+    path: src/content/cupons
+    format: yaml
+    filename: "{primary}.yml"
+    view: { primary: empresa }
+    fields:
+      - { name: empresa, label: "Empresa", type: string, required: true }
+      - { name: beneficio, label: "Benefício (ex.: 10% de desconto)", type: string }
+      - { name: codigo, label: "Código do cupom (opcional)", type: string }
+      - { name: validade, label: "Validade (opcional)", type: string }
+      - { name: regras, label: "Regras ou observações (opcional)", type: text }
+      - { name: link, label: "Link", type: string }
+      - name: destino
+        label: "Destino (opcional)"
+        type: reference
+        options: { collection: destinos, search: titulo, value: "{path}", label: "{titulo}" }
+      - { name: exemplo, label: "É conteúdo de exemplo? (desmarque quando for real)", type: boolean, default: false }
+
+  - name: hospedagens
+    label: "Viagens · Hospedagens e serviços"
+    type: collection
+    path: src/content/hospedagens
+    format: yaml
+    filename: "{primary}.yml"
+    view: { primary: nome }
+    fields:
+      - { name: nome, label: "Nome", type: string, required: true }
+      - name: tipo
+        label: "Tipo"
+        type: select
+        options: { values: [Hospedagem, Serviço] }
+      - { name: descricao, label: "Por que você recomenda", type: text }
+      - { name: link, label: "Link", type: string }
+      - name: destino
+        label: "Destino (opcional)"
+        type: reference
+        options: { collection: destinos, search: titulo, value: "{path}", label: "{titulo}" }
+      - { name: exemplo, label: "É conteúdo de exemplo? (desmarque quando for real)", type: boolean, default: false }
+
+  - name: equipamentos
+    label: "Viagens · Equipamentos e produtos"
+    type: collection
+    path: src/content/equipamentos
+    format: yaml
+    filename: "{primary}.yml"
+    view: { primary: nome, fields: [nome, categoria] }
+    fields:
+      - { name: nome, label: "Nome do produto", type: string, required: true }
+      - { name: categoria, label: "Categoria (ex.: Mochilas) — itens com a mesma categoria ficam juntos", type: string }
+      - { name: descricao, label: "Por que você usa", type: text }
+      - { name: imagem, label: "Foto", type: image }
+      - { name: link, label: "Link de compra", type: string }
+      - { name: exemplo, label: "É conteúdo de exemplo? (desmarque quando for real)", type: boolean, default: false }
+
+  # ================= CARREIRA INTERNACIONAL =================
+  - name: guias
+    label: "Carreira · Guias e e-books"
+    type: collection
+    path: src/content/guias
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view: { primary: titulo }
+    fields:
+      - { name: titulo, label: "Título", type: string, required: true }
+      - name: formato
+        label: "Formato"
+        type: select
+        options: { values: [Guia, E-book] }
+      - { name: resumo, label: "Resumo (aparece no cartão)", type: text }
+      - { name: capa, label: "Capa", type: image }
+      - { name: link, label: "Link de compra ou download", type: string }
+      - { name: textoBotao, label: "Texto do botão", type: string, default: "Quero o guia" }
+      - { name: exemplo, label: "É conteúdo de exemplo? (desmarque quando for real)", type: boolean, default: false }
+      - { name: body, label: "Apresentação completa", type: rich-text, options: { format: markdown } }
+
+  - name: materiais
+    label: "Carreira · Materiais gratuitos"
+    type: collection
+    path: src/content/materiais
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view: { primary: titulo }
+    fields:
+      - { name: titulo, label: "Título", type: string, required: true }
+      - { name: resumo, label: "Resumo (aparece no cartão)", type: text }
+      - { name: capa, label: "Capa", type: image }
+      - { name: link, label: "Link para baixar", type: string }
+      - { name: exemplo, label: "É conteúdo de exemplo? (desmarque quando for real)", type: boolean, default: false }
+      - { name: body, label: "Descrição", type: rich-text, options: { format: markdown } }
+
+  - name: ferramentas
+    label: "Carreira · Ferramentas e indicações"
+    type: collection
+    path: src/content/ferramentas
+    format: yaml
+    filename: "{primary}.yml"
+    view: { primary: nome, fields: [nome, categoria] }
+    fields:
+      - { name: nome, label: "Nome", type: string, required: true }
+      - { name: categoria, label: "Categoria (ex.: Currículo, Idiomas)", type: string }
+      - { name: descricao, label: "Para que serve / por que você indica", type: text }
+      - { name: link, label: "Link", type: string }
+      - { name: exemplo, label: "É conteúdo de exemplo? (desmarque quando for real)", type: boolean, default: false }
+
+  - name: conteudos
+    label: "Carreira · Conteúdos (LinkedIn, currículo, vagas, entrevistas)"
+    type: collection
+    path: src/content/conteudos
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view: { primary: titulo, fields: [titulo, tema], sort: data, order: desc }
+    fields:
+      - { name: titulo, label: "Título", type: string, required: true }
+      - name: tema
+        label: "Tema"
+        type: select
+        required: true
+        options:
+          values:
+            - { name: linkedin, label: LinkedIn }
+            - { name: curriculo, label: Currículo }
+            - { name: vagas, label: Busca de vagas }
+            - { name: entrevistas, label: Entrevistas }
+      - { name: resumo, label: "Resumo (aparece no cartão)", type: text }
+      - { name: youtube, label: "Vídeo do YouTube (opcional)", type: string }
+      - { name: data, label: "Data", type: date, default: "", options: { format: yyyy-MM-dd } }
+      - { name: exemplo, label: "É conteúdo de exemplo? (desmarque quando for real)", type: boolean, default: false }
+      - { name: body, label: "Texto", type: rich-text, options: { format: markdown } }

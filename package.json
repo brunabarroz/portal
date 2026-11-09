@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
-    "painel-local": "npx decap-server"
+    "preview": "astro preview"
   },
   "dependencies": {
     "astro": "4.16.19"
