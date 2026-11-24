@@ -89,31 +89,67 @@ h1 .script, h2 .script { font-size: 1.15em; line-height: .9; color: var(--area-f
 .lateral__sub { font-size: .66rem; letter-spacing: .26em; text-transform: uppercase; color: var(--texto-suave); display: block; margin-top: 6px; }
 .lateral__rodape { margin: auto 0 0; padding-top: 16px; text-align: center; font-size: .64rem; letter-spacing: .22em; text-transform: uppercase; color: var(--texto-suave); }
 
-/* --- Abas de pasta (lista simples, cabe quantas precisar) --- */
-.pastas { list-style: none; margin: 0; padding: 0 0 0 14px; display: grid; gap: 8px; }
+/* --- Pastas de arquivo na lateral (versão compacta, empilha quantas precisar) --- */
+.pastas { list-style: none; margin: 0; padding: 0 20px 0 10px; }
+.pastas > li + li { margin-top: -12px; }
 
-.pasta-l {
-  --cor: var(--lilas);
-  display: flex; align-items: center; gap: 10px; position: relative;
-  padding: 9px 14px; margin-right: -1px;
-  background: color-mix(in srgb, var(--cor) 45%, transparent);
-  border-radius: 6px 0 0 6px;
-  color: var(--noite); text-decoration: none;
-  transition: background .2s ease, padding .2s ease;
+.pasta-l { --cor: var(--lilas); --frente: #E3D3E8; display: block; position: relative; padding-top: 24px; color: var(--noite); text-decoration: none; transition: transform .25s ease; }
+.pasta-l--curso   { --cor: var(--azul);  --frente: #BFCFDD; }
+.pasta-l--compras { --cor: var(--areia); --frente: #DCCDBC; }
+.pasta-l:hover { transform: translateX(5px); color: var(--noite); }
+
+/* aba da pasta */
+.pasta-l__aba {
+  position: absolute; top: 0; left: 0; height: 26px; max-width: 80%;
+  padding: 6px 26px 0 12px;
+  background: var(--cor); border-radius: 7px 20px 0 0;
+  font-family: var(--f-mono); font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap;
+  box-shadow: 0 -1px 3px rgba(47,43,46,.06);
 }
-.pasta-l--curso   { --cor: var(--azul); }
-.pasta-l--compras { --cor: var(--areia); }
-.pasta-l:hover { background: var(--cor); color: var(--noite); padding-left: 18px; }
-.pasta-l__num { font-family: var(--f-mono); font-size: .66rem; letter-spacing: .1em; color: var(--texto-suave); }
-.pasta-l__nome { font-family: var(--f-titulo); font-size: 1.15rem; font-weight: 500; line-height: 1.15; }
-.pasta-l[aria-current] { background: var(--cor); box-shadow: inset 3px 0 0 rgba(47,43,46,.35); }
-.pasta-l[aria-current] .pasta-l__nome { font-weight: 600; }
+.pasta-l--direita .pasta-l__aba { left: auto; right: 0; border-radius: 20px 7px 0 0; padding: 6px 12px 0 22px; }
 
-/* pastinhas dentro de uma área (ex.: compras) */
-.pastas__sub { list-style: none; margin: 6px 0 4px 18px; padding: 0 0 0 12px; border-left: 1px solid var(--linha); display: grid; gap: 2px; }
-.pastas__sub a { display: block; padding: 4px 10px; border-radius: 4px; font-size: .95rem; color: var(--texto-suave); text-decoration: none; }
-.pastas__sub a:hover { color: var(--noite); background: var(--areia-claro); }
-.pastas__sub a[aria-current] { color: var(--noite); background: var(--areia-claro); font-weight: 500; }
+/* corpo da pasta: fundo + papel aparecendo + frente com recorte */
+.pasta-l__corpo {
+  display: block; position: relative; isolation: isolate; height: 76px;
+  background: var(--cor); border-radius: 0 7px 4px 4px;
+  box-shadow: 0 -2px 6px rgba(47,43,46,.07), 0 2px 0 rgba(47,43,46,.04);
+}
+.pasta-l--direita .pasta-l__corpo { border-radius: 7px 0 4px 4px; }
+.pasta-l__corpo::before {
+  content: ''; position: absolute; left: 6px; right: 6px; top: 9px; height: 22px;
+  background: var(--branco); border-radius: 3px 3px 0 0; z-index: 0; box-shadow: 0 1px 2px rgba(0,0,0,.06);
+}
+.pasta-l__corpo::after {
+  content: ''; position: absolute; left: 0; right: 0; top: 18px; bottom: 0;
+  background: var(--frente); border-radius: 0 0 4px 4px; z-index: 2;
+  clip-path: polygon(0 12px, 54% 12px, 60% 0, 100% 0, 100% 100%, 0 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.4);
+}
+.pasta-l--direita .pasta-l__corpo::after { clip-path: polygon(0 0, 40% 0, 46% 12px, 100% 12px, 100% 100%, 0 100%); }
+.pasta-l__corpo .clipe { z-index: 3; width: 13px; height: 34px; top: -10px; }
+
+.pasta-l__nome {
+  position: absolute; left: 14px; right: 12px; bottom: 11px; z-index: 3;
+  font-family: var(--f-titulo); font-size: 1.15rem; font-weight: 500; line-height: 1.1;
+}
+
+/* pasta aberta: puxada para fora */
+.pasta-l[aria-current] { transform: translateX(10px); }
+.pasta-l[aria-current] .pasta-l__aba { font-weight: 700; }
+.pasta-l[aria-current] .pasta-l__corpo { box-shadow: 0 -2px 6px rgba(47,43,46,.07), 6px 8px 18px -10px rgba(47,43,46,.45); }
+.pastas:has(.pasta-l[aria-current]) .pasta-l:not([aria-current]) .pasta-l__corpo,
+.pastas:has(.pasta-l[aria-current]) .pasta-l:not([aria-current]) .pasta-l__aba { filter: saturate(.75) brightness(.99); }
+
+/* pastinhas de compras: fichas saindo da pasta "Minhas compras" */
+.pastas__sub { list-style: none; position: relative; z-index: 1; margin: -4px 0 0 14px; padding: 8px 0 6px; display: grid; gap: 4px; }
+.pastas__sub a {
+  display: block; padding: 5px 12px; border-radius: 0 0 4px 4px;
+  background: var(--branco); border: 1px solid var(--linha); border-top: 3px solid var(--areia);
+  font-size: .9rem; line-height: 1.2; color: var(--noite); text-decoration: none;
+  box-shadow: 0 1px 2px rgba(47,43,46,.06); transition: transform .2s ease;
+}
+.pastas__sub a:hover { transform: translateX(4px); color: var(--noite); }
+.pastas__sub a[aria-current] { background: var(--areia-claro); border-top-color: var(--areia-forte); font-weight: 500; }
 
 /* --- Página --- */
 .folha { min-width: 0; display: flex; flex-direction: column; }
