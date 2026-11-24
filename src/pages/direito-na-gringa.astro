@@ -14,7 +14,7 @@ const temLink = !pendente(curso.linkHotmart);
     <h1>{curso.nome}</h1>
     <p class="curso-topo__chamada"><Texto valor={curso.chamada} /></p>
     <BotaoLink href={curso.linkHotmart} rotulo={curso.textoBotao} falta="link da Hotmart" />
-    <p class="curso-topo__nota">Inscrição e pagamento pela Hotmart.</p>
+    {curso.linkHotmart.includes('hotmart') && <p class="curso-topo__nota">Inscrição e pagamento pela Hotmart.</p>}
   </header>
 
   {curso.paraQuem.length > 0 && (
