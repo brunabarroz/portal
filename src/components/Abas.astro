@@ -1,15 +1,14 @@
 ---
-// Navegação principal: abas de pasta na lateral (computador)
-// e abas fixas embaixo (celular).
+// Navegação principal: pastas de arquivo na lateral (computador)
+// e abas de pasta no topo (celular).
 import { AREAS, ORDEM_AREAS, type AreaId } from '../lib/estrutura';
-import Clipe from './Clipe.astro';
 interface Props { area: AreaId; naEntrada: boolean }
 const { area, naEntrada } = Astro.props;
 const atual = (id: AreaId) => (id === area ? (naEntrada ? 'page' : 'location') : undefined);
 ---
 <aside class="lateral">
-  <a class="lateral__marca" href="/" aria-label="Bruna Barros — página inicial">
-    <span class="lateral__nome">Bruna Barros</span>
+  <a class="marca" href="/" aria-label="Bruna Barros — página inicial">
+    <span class="marca__nome">Bruna Barros</span>
   </a>
   <nav aria-label="Áreas do site">
     <ul class="pastas">
@@ -17,10 +16,7 @@ const atual = (id: AreaId) => (id === area ? (naEntrada ? 'page' : 'location') :
         <li>
           <a class:list={['pasta-l', `pasta-l--${id}`, id === 'curso' && 'pasta-l--direita']} href={AREAS[id].href} aria-current={atual(id)}>
             <span class="pasta-l__aba">{AREAS[id].numero} · {AREAS[id].curto}</span>
-            <span class="pasta-l__corpo">
-              <Clipe estilo={id === 'curso' ? 'left:22px' : 'right:24px'} />
-              <span class="pasta-l__nome">{AREAS[id].nome}</span>
-            </span>
+            <span class="pasta-l__corpo"><span class="pasta-l__nome">{AREAS[id].nome}</span></span>
           </a>
         </li>
       ))}
@@ -30,17 +26,12 @@ const atual = (id: AreaId) => (id === area ? (naEntrada ? 'page' : 'location') :
 </aside>
 
 <header class="topo-mobile">
-  <a href="/"><span class="lateral__nome">Bruna Barros</span></a>
+  <a class="marca" href="/"><span class="marca__nome">Bruna Barros</span></a>
+  <nav aria-label="Áreas do site">
+    <ul class="abas-mobile">
+      {ORDEM_AREAS.map((id) => (
+        <li><a class={`cor-${id}`} href={AREAS[id].href} aria-current={atual(id)}>{AREAS[id].curto}</a></li>
+      ))}
+    </ul>
+  </nav>
 </header>
-<nav class="barra-mobile" aria-label="Áreas do site">
-  <ul>
-    {ORDEM_AREAS.map((id) => (
-      <li>
-        <a class={`cor-${id}`} href={AREAS[id].href} aria-current={atual(id)}>
-          <span class="barra-mobile__aqui" aria-hidden="true">você está aqui</span>
-          <span class="barra-mobile__nome">{AREAS[id].curto}</span>
-        </a>
-      </li>
-    ))}
-  </ul>
-</nav>

@@ -1,61 +1,108 @@
 ---
 // Página do curso Direito na Gringa. O pagamento acontece na Hotmart.
+// O botão de compra aparece logo no topo e, no celular, fica fixo embaixo enquanto a pessoa lê.
 import Base from '../layouts/Base.astro';
-import Cabecalho from '../components/Cabecalho.astro';
 import Texto from '../components/Texto.astro';
 import BotaoLink from '../components/BotaoLink.astro';
 import { pendente } from '../lib/util';
 import { curso, paragrafos } from '../lib/dados';
+const temLink = !pendente(curso.linkHotmart);
 ---
 <Base area="curso" titulo={curso.nome} descricao={pendente(curso.chamada) ? undefined : curso.chamada}>
-  <Cabecalho etiqueta="meu curso" titulo={curso.nome}>
-    <p class="cabecalho__descricao"><Texto valor={curso.chamada} /></p>
-  </Cabecalho>
+  <header class="curso-topo">
+    <span class="etiqueta">meu curso</span>
+    <h1>{curso.nome}</h1>
+    <p class="curso-topo__chamada"><Texto valor={curso.chamada} /></p>
+    <BotaoLink href={curso.linkHotmart} rotulo={curso.textoBotao} falta="link da Hotmart" />
+    <p class="curso-topo__nota">Inscrição e pagamento pela Hotmart.</p>
+  </header>
 
-  <div class="curso">
-    <div class="texto-longo">
-      {pendente(curso.descricao)
-        ? <p><Texto valor={curso.descricao} falta="apresentação do curso" /></p>
-        : paragrafos(curso.descricao).map((t) => <p>{t}</p>)}
+  {curso.paraQuem.length > 0 && (
+    <section class="para-quem" aria-labelledby="para-quem">
+      <h2 id="para-quem">Para quem é</h2>
+      <ul>{curso.paraQuem.map((p) => <li><Texto valor={p} /></li>)}</ul>
+    </section>
+  )}
 
-      {curso.paraQuem.length > 0 && (<>
-        <h2>Para quem é</h2>
-        <ul>{curso.paraQuem.map((p) => <li><Texto valor={p} /></li>)}</ul>
-      </>)}
+  <section class="texto-longo">
+    <h2>Sobre o curso</h2>
+    {pendente(curso.descricao)
+      ? <p><Texto valor={curso.descricao} falta="apresentação do curso" /></p>
+      : paragrafos(curso.descricao).map((t) => <p>{t}</p>)}
 
-      {curso.modulos.length > 0 && (<>
+    {curso.modulos.length > 0 && (<>
       <h2>O que você vai encontrar</h2>
       <ol class="modulos">
         {curso.modulos.map((m, i) => (
           <li>
-            <span class="modulos__num mono">módulo {String(i + 1).padStart(2, '0')}</span>
+            <span class="modulos__num">Módulo {i + 1}</span>
             <strong><Texto valor={m.titulo} /></strong>
             {m.descricao && <p>{m.descricao}</p>}
           </li>
         ))}
       </ol>
-      </>)}
-    </div>
+    </>)}
+  </section>
 
-    <aside class="curso__cartao" aria-label="Acessar o curso">
-      <span class="mono">inscrição</span>
-      <p>A inscrição e o pagamento são feitos na Hotmart.</p>
-      <BotaoLink href={curso.linkHotmart} rotulo={curso.textoBotao} falta="link da Hotmart" />
-    </aside>
+  <div class="curso-fim">
+    <BotaoLink href={curso.linkHotmart} rotulo={curso.textoBotao} falta="link da Hotmart" />
   </div>
+
+  {temLink && (
+    <div class="cta-fixo" aria-hidden="true">
+      <a class="botao" href={curso.linkHotmart} target="_blank" rel="noopener sponsored" tabindex="-1">{curso.textoBotao} ↗</a>
+    </div>
+  )}
 </Base>
 
-<style>
-  .curso { display: grid; grid-template-columns: 1fr 300px; gap: 40px; align-items: start; }
-  .curso__cartao {
-    position: sticky; top: 24px;
-    background: var(--area-suave); border: 1.5px solid var(--area); border-radius: 4px 14px 14px 14px;
-    padding: 22px; display: grid; gap: 10px;
+<script>
+  // Mostra o botão fixo só depois que o botão do topo sai da tela.
+  const topo = document.querySelector('.curso-topo .botao');
+  const fixo = document.querySelector('.cta-fixo');
+  if (topo && fixo) {
+    new IntersectionObserver(([e]) => fixo.classList.toggle('cta-fixo--visivel', !e.isIntersecting && e.boundingClientRect.top < 0)).observe(topo);
   }
-  .curso__cartao p { margin: 0; color: var(--texto-suave); }
+</script>
+
+<style>
+  .curso-topo {
+    background: var(--azul-claro); border-radius: 20px; padding: 34px 36px 28px; margin-bottom: 40px; max-width: 760px;
+  }
+  .curso-topo h1 { margin: 6px 0 10px; }
+  .curso-topo__chamada { font-size: 1.1rem; color: var(--texto); max-width: 600px; margin-bottom: 20px; }
+  .curso-topo__nota { font-size: .85rem; color: var(--suave); margin: 10px 0 0; }
+
+  .para-quem { max-width: 760px; margin-bottom: 40px; }
+  .para-quem ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .para-quem li {
+    position: relative; padding: 14px 16px 14px 46px; background: var(--branco);
+    border: 1px solid var(--linha); border-radius: 12px;
+  }
+  .para-quem li::before {
+    content: '✓'; position: absolute; left: 16px; top: 14px; width: 20px; height: 20px; border-radius: 50%;
+    display: grid; place-items: center; font-size: .72rem; font-weight: 700; background: var(--azul); color: var(--azul-forte);
+  }
+
   .modulos { list-style: none; padding: 0 !important; display: grid; gap: 10px; }
-  .modulos li { background: #fff; border: 1.5px solid var(--linha); border-left: 6px solid var(--area); border-radius: 6px; padding: 12px 16px; display: grid; gap: 2px; }
-  .modulos li p { margin: 4px 0 0; color: var(--texto-suave); font-size: .95rem; }
-  .modulos__num { color: var(--area-forte); }
-  @media (max-width: 860px) { .curso { grid-template-columns: 1fr; } .curso__cartao { position: static; } }
+  .modulos li { background: var(--branco); border: 1px solid var(--linha); border-radius: 12px; padding: 12px 16px; display: grid; gap: 2px; }
+  .modulos li p { margin: 4px 0 0; color: var(--suave); font-size: .95rem; }
+  .modulos__num { font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--azul-forte); }
+
+  .curso-fim { margin-top: 32px; }
+  .cta-fixo { display: none; }
+
+  @media (max-width: 860px) {
+    .curso-topo { padding: 24px 20px 22px; margin: 0 0 32px; }
+    .curso-topo :global(.botao) { width: 100%; }
+    .curso-fim { display: none; }
+    .cta-fixo {
+      display: block; position: fixed; transform: translateY(110%); transition: transform .25s ease; left: 0; right: 0; bottom: 0; z-index: 40;
+      padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(251, 249, 246, .95); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-top: 1px solid var(--linha);
+    }
+    .cta-fixo.cta-fixo--visivel { transform: none; }
+    .cta-fixo .botao { width: 100%; }
+    :global(.folha__conteudo) { padding-bottom: 96px; }
+  }
 </style>
