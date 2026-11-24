@@ -1,13 +1,11 @@
 ---
 // Navegação principal: abas de pasta na lateral (computador)
-// e abas fixas embaixo (celular). As pastinhas de compras aparecem dentro de "Minhas compras".
-import { AREAS, ORDEM_AREAS, pastasCompras, type AreaId } from '../lib/estrutura';
+// e abas fixas embaixo (celular).
+import { AREAS, ORDEM_AREAS, type AreaId } from '../lib/estrutura';
 import Clipe from './Clipe.astro';
 interface Props { area: AreaId; naEntrada: boolean }
 const { area, naEntrada } = Astro.props;
 const atual = (id: AreaId) => (id === area ? (naEntrada ? 'page' : 'location') : undefined);
-const pastas = await pastasCompras();
-const caminho = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : Astro.url.pathname + '/';
 ---
 <aside class="lateral">
   <a class="lateral__marca" href="/" aria-label="Bruna Barros — página inicial">
@@ -24,13 +22,6 @@ const caminho = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : Astro.ur
               <span class="pasta-l__nome">{AREAS[id].nome}</span>
             </span>
           </a>
-          {id === 'compras' && pastas.length > 0 && (
-            <ul class="pastas__sub">
-              {pastas.map((p) => (
-                <li><a href={p.href} aria-current={caminho === p.href ? 'page' : undefined}>{p.nome}</a></li>
-              ))}
-            </ul>
-          )}
         </li>
       ))}
     </ul>
