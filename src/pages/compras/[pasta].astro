@@ -2,8 +2,7 @@
 // Uma pasta de compras (ex.: Viagem e mochilão) com os produtos e os links.
 import Base from '../../layouts/Base.astro';
 import Cabecalho from '../../components/Cabecalho.astro';
-import Ficha from '../../components/Ficha.astro';
-import BotaoLink from '../../components/BotaoLink.astro';
+import Produto from '../../components/Produto.astro';
 import { pastasCompras, type Pasta } from '../../lib/estrutura';
 
 export async function getStaticPaths() {
@@ -14,12 +13,9 @@ const { pasta } = Astro.props as { pasta: Pasta };
 ---
 <Base area="compras" titulo={pasta.nome} trilha={[{ nome: pasta.nome }]} subAtiva={pasta.href}>
   <Cabecalho etiqueta="minhas compras" titulo={pasta.nome} />
-  <div class="grade">
+  <div class="grade grade--3">
     {pasta.produtos.map((p) => (
-      <Ficha titulo={p.data.nome} exemplo={p.data.exemplo} capa={p.data.imagem}>
-        {p.data.descricao && <p class="ficha__resumo">{p.data.descricao}</p>}
-        <div class="ficha__rodape"><BotaoLink href={p.data.link} rotulo="Ver produto" variante="claro" /></div>
-      </Ficha>
+      <Produto nome={p.data.nome} link={p.data.link} imagem={p.data.imagem} descricao={p.data.descricao} exemplo={p.data.exemplo} />
     ))}
   </div>
 </Base>
