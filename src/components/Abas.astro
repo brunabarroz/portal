@@ -1,46 +1,32 @@
 ---
-// Navegação principal: pastas empilhadas na lateral (computador)
-// e abas de pasta fixas embaixo (celular).
-import { AREAS, ORDEM_AREAS, type AreaId } from '../lib/estrutura';
-import { pendente } from '../lib/util';
-import Clipe from './Clipe.astro';
-import { perfil, curso } from '../lib/dados';
+// Navegação principal: abas de pasta na lateral (computador)
+// e abas fixas embaixo (celular). As pastinhas de compras aparecem dentro de "Minhas compras".
+import { AREAS, ORDEM_AREAS, pastasCompras, type AreaId } from '../lib/estrutura';
 interface Props { area: AreaId; naEntrada: boolean }
 const { area, naEntrada } = Astro.props;
 const atual = (id: AreaId) => (id === area ? (naEntrada ? 'page' : 'location') : undefined);
-const lado: Record<AreaId, string> = { bruna: '', curso: 'pasta-l--direita', compras: '' };
+const pastas = await pastasCompras();
+const caminho = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : Astro.url.pathname + '/';
 ---
 <aside class="lateral">
   <a class="lateral__marca" href="/" aria-label="Bruna Barros — página inicial">
     <span class="lateral__nome">Bruna Barros</span>
-    <span class="lateral__sub">carreira internacional · indicações</span>
   </a>
   <nav aria-label="Áreas do site">
     <ul class="pastas">
       {ORDEM_AREAS.map((id) => (
         <li>
-          <a class:list={['pasta-l', `pasta-l--${id}`, lado[id]]} href={AREAS[id].href} aria-current={atual(id)}>
-            <span class="pasta-l__aba">{AREAS[id].numero} · {AREAS[id].curto}</span>
-            <span class="pasta-l__corpo">
-              {id === 'bruna' && (<>
-                <span class="pasta-l__enfeite polaroid" aria-hidden="true">{pendente(perfil.foto) ? <span /> : <img src={perfil.foto} alt="" />}</span>
-                <Clipe estilo="right:34px" />
-              </>)}
-              {id === 'curso' && (<>
-                <span class="pasta-l__enfeite bilhete" aria-hidden="true"><small>meu curso</small><strong>{curso.nome}</strong></span>
-                <Clipe tipo="prendedor" estilo="left:60px;top:-22px" />
-              </>)}
-              {id === 'compras' && (<>
-                <span class="pasta-l__enfeite cartao-postal" aria-hidden="true"><b>♡ LINKS</b><i>o que eu uso</i></span>
-                <Clipe estilo="right:40px" />
-              </>)}
-              <span class="pasta-l__itens">
-                <span class="pasta-l__aqui">você está aqui</span>
-                <span class="pasta-l__nome">{AREAS[id].nome}</span>
-                {AREAS[id].itens.join(' · ')}
-              </span>
-            </span>
+          <a class:list={['pasta-l', `pasta-l--${id}`]} href={AREAS[id].href} aria-current={atual(id)}>
+            <span class="pasta-l__num">{AREAS[id].numero}</span>
+            <span class="pasta-l__nome">{AREAS[id].nome}</span>
           </a>
+          {id === 'compras' && pastas.length > 0 && (
+            <ul class="pastas__sub">
+              {pastas.map((p) => (
+                <li><a href={p.href} aria-current={caminho === p.href ? 'page' : undefined}>{p.nome}</a></li>
+              ))}
+            </ul>
+          )}
         </li>
       ))}
     </ul>

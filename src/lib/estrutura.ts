@@ -75,10 +75,7 @@ export async function pastasCompras(): Promise<Pasta[]> {
   return [...mapa.values()];
 }
 
-/** Sub-abas de cada área (só Compras tem: uma para cada pasta). */
-export async function subAbas(area: AreaId): Promise<SubAba[]> {
-  if (area !== 'compras') return [];
-  const pastas = await pastasCompras();
-  if (pastas.length < 2) return []; // com uma pasta só, as abas não ajudam
-  return pastas.map((p) => ({ nome: p.nome, href: p.href, descricao: '', quantidade: p.produtos.length }));
+/** Sub-abas no topo da página: desligadas (as pastinhas já aparecem na lateral). */
+export async function subAbas(_area: AreaId): Promise<SubAba[]> {
+  return [];
 }

@@ -4,7 +4,6 @@ import '../styles/global.css';
 import Abas from '../components/Abas.astro';
 import SubAbas from '../components/SubAbas.astro';
 import Trilha from '../components/Trilha.astro';
-import OutrasAbas from '../components/OutrasAbas.astro';
 import { AREAS, type AreaId } from '../lib/estrutura';
 
 interface Props {
@@ -44,7 +43,6 @@ const tituloCompleto = area === 'bruna' && naEntrada ? 'Bruna Barros' : `${titul
           {area !== 'bruna' && <SubAbas area={area} ativa={subAtiva} />}
           <slot />
         </main>
-        <OutrasAbas area={area} />
       </div>
     </div>
   </body>

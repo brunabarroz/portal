@@ -22,7 +22,7 @@
   --f-script: 'Pinyon Script', 'Snell Roundhand', cursive;
   --f-mono: 'Courier Prime', 'Courier New', monospace;
 
-  --lateral: 300px;
+  --lateral: 230px;
   --raio: 3px;
   --sombra: 0 1px 2px rgba(47, 43, 46, .06), 0 10px 28px -14px rgba(47, 43, 46, .28);
   --grade-papel:
@@ -85,83 +85,35 @@ h1 .script, h2 .script { font-size: 1.15em; line-height: .9; color: var(--area-f
 }
 .lateral__marca { display: block; text-align: center; text-decoration: none; color: var(--noite); margin: 0 18px 22px; }
 .lateral__marca:hover { color: var(--noite); }
-.lateral__nome { font-family: var(--f-script); font-size: 2.6rem; line-height: 1; display: block; }
+.lateral__nome { font-family: var(--f-script); font-size: 2.1rem; line-height: 1; display: block; }
 .lateral__sub { font-size: .66rem; letter-spacing: .26em; text-transform: uppercase; color: var(--texto-suave); display: block; margin-top: 6px; }
 .lateral__rodape { margin: auto 0 0; padding-top: 16px; text-align: center; font-size: .64rem; letter-spacing: .22em; text-transform: uppercase; color: var(--texto-suave); }
 
-/* --- Pastas empilhadas --- */
-.pastas { list-style: none; margin: 0; padding: 0 26px 0 12px; }
-.pastas li + li { margin-top: -30px; }
-.pastas li:last-child .pasta-l__itens { bottom: 16px; }
-.pastas li:last-child .pasta-l__corpo { height: 140px; }
+/* --- Abas de pasta (lista simples, cabe quantas precisar) --- */
+.pastas { list-style: none; margin: 0; padding: 0 0 0 14px; display: grid; gap: 8px; }
 
-.pasta-l { --cor: var(--lilas); --frente: #E3D3E8; display: block; position: relative; padding-top: 30px; color: var(--noite); text-decoration: none; transition: transform .25s ease; }
-.pasta-l--curso { --cor: var(--azul);  --frente: #BFCFDD; }
-.pasta-l--compras { --cor: var(--areia); --frente: #DCCDBC; }
-.pasta-l:hover { transform: translateX(7px); color: var(--noite); }
-
-.pasta-l__aba {
-  position: absolute; top: 0; left: 0; height: 32px; max-width: 86%;
-  padding: 8px 34px 0 16px;
-  background: var(--cor);
-  border-radius: 8px 26px 0 0;
-  font-family: var(--f-mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap;
-  box-shadow: 0 -1px 3px rgba(47,43,46,.06);
+.pasta-l {
+  --cor: var(--lilas);
+  display: flex; align-items: center; gap: 10px; position: relative;
+  padding: 9px 14px; margin-right: -1px;
+  background: color-mix(in srgb, var(--cor) 45%, transparent);
+  border-radius: 6px 0 0 6px;
+  color: var(--noite); text-decoration: none;
+  transition: background .2s ease, padding .2s ease;
 }
-.pasta-l--direita .pasta-l__aba { left: auto; right: 0; border-radius: 26px 8px 0 0; padding: 8px 14px 0 26px; }
+.pasta-l--curso   { --cor: var(--azul); }
+.pasta-l--compras { --cor: var(--areia); }
+.pasta-l:hover { background: var(--cor); color: var(--noite); padding-left: 18px; }
+.pasta-l__num { font-family: var(--f-mono); font-size: .66rem; letter-spacing: .1em; color: var(--texto-suave); }
+.pasta-l__nome { font-family: var(--f-titulo); font-size: 1.15rem; font-weight: 500; line-height: 1.15; }
+.pasta-l[aria-current] { background: var(--cor); box-shadow: inset 3px 0 0 rgba(47,43,46,.35); }
+.pasta-l[aria-current] .pasta-l__nome { font-weight: 600; }
 
-.pasta-l__corpo {
-  display: block; position: relative; isolation: isolate;
-  height: 168px;
-  background: var(--cor);
-  border-radius: 0 8px 4px 4px;
-  box-shadow: 0 -2px 6px rgba(47,43,46,.07), 0 2px 0 rgba(47,43,46,.04);
-}
-.pasta-l--direita .pasta-l__corpo { border-radius: 8px 0 4px 4px; }
-/* papel branco aparecendo entre o fundo e a frente da pasta */
-.pasta-l__corpo::before {
-  content: ''; position: absolute; left: 6px; right: 6px; top: 12px; height: 30px;
-  background: var(--branco); border-radius: 3px 3px 0 0; z-index: 0;
-  box-shadow: 0 1px 2px rgba(0,0,0,.06);
-}
-/* frente da pasta, com o recorte em degrau */
-.pasta-l__corpo::after {
-  content: ''; position: absolute; left: 0; right: 0; top: 26px; bottom: 0;
-  background: var(--frente);
-  border-radius: 0 0 4px 4px; z-index: 2;
-  clip-path: polygon(0 16px, 54% 16px, 60% 0, 100% 0, 100% 100%, 0 100%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.4);
-}
-.pasta-l--direita .pasta-l__corpo::after { clip-path: polygon(0 0, 40% 0, 46% 16px, 100% 16px, 100% 100%, 0 100%); }
-
-.pasta-l__itens {
-  position: absolute; left: 16px; right: 16px; bottom: 42px; z-index: 3;
-  font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; color: rgba(47,43,46,.72);
-}
-.pasta-l__nome { display: block; font-family: var(--f-titulo); font-size: 1.32rem; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--noite); line-height: 1.1; margin-bottom: 2px; }
-.pasta-l__aqui { display: none; position: absolute; right: 0; bottom: 100%; font-family: var(--f-script); font-size: 1.2rem; text-transform: none; letter-spacing: 0; color: var(--noite); line-height: 1; margin-bottom: 4px; }
-
-/* decoração presa dentro da pasta */
-.pasta-l__enfeite { position: absolute; z-index: 1; top: -8px; transition: transform .25s ease; }
-.pasta-l:hover .pasta-l__enfeite { transform: translateY(-4px) rotate(var(--giro, 0deg)); }
-.polaroid { width: 74px; padding: 5px 5px 16px; background: var(--branco); box-shadow: var(--sombra); --giro: -7deg; transform: rotate(-7deg); right: 22px; }
-.polaroid span, .polaroid img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; background: linear-gradient(160deg, #C9D6E3 0%, #EADFEE 55%, #F5EDE3 100%); }
-.bilhete { width: 118px; padding: 20px 10px 9px; background: var(--branco); box-shadow: var(--sombra); left: 18px; --giro: 4deg; transform: rotate(4deg); text-align: center; }
-.bilhete small { display: block; font-family: var(--f-mono); font-size: .52rem; letter-spacing: .12em; text-transform: uppercase; color: var(--texto-suave); }
-.bilhete strong { display: block; font-family: var(--f-script); font-weight: 400; font-size: 1.05rem; line-height: 1.15; color: var(--azul-forte); margin-top: 3px; }
-.cartao-postal { width: 104px; height: 70px; right: 26px; padding: 8px; background: var(--branco); box-shadow: var(--sombra); --giro: -5deg; transform: rotate(-5deg); border: 1px dashed rgba(116,88,63,.4); outline: 4px solid var(--branco); }
-.cartao-postal b { font-family: var(--f-mono); font-size: .9rem; letter-spacing: .14em; color: var(--areia-forte); display: block; }
-.cartao-postal i { font-family: var(--f-script); font-style: normal; font-size: 1rem; color: var(--noite); }
-.clipe { position: absolute; z-index: 4; width: 18px; height: 46px; top: -14px; }
-.prendedor { position: absolute; z-index: 4; width: 34px; height: 40px; top: -18px; }
-
-/* pasta ativa: puxada para fora */
-.pasta-l[aria-current] { transform: translateX(14px); }
-.pasta-l[aria-current] .pasta-l__aba { font-weight: 700; }
-.pasta-l[aria-current] .pasta-l__corpo { box-shadow: 0 -2px 6px rgba(47,43,46,.07), 8px 10px 22px -10px rgba(47,43,46,.45); }
-.pasta-l[aria-current] .pasta-l__aqui { display: block; }
-.pastas:has(.pasta-l[aria-current]) .pasta-l:not([aria-current]) .pasta-l__corpo,
-.pastas:has(.pasta-l[aria-current]) .pasta-l:not([aria-current]) .pasta-l__aba { filter: saturate(.75) brightness(.99); }
+/* pastinhas dentro de uma área (ex.: compras) */
+.pastas__sub { list-style: none; margin: 6px 0 4px 18px; padding: 0 0 0 12px; border-left: 1px solid var(--linha); display: grid; gap: 2px; }
+.pastas__sub a { display: block; padding: 4px 10px; border-radius: 4px; font-size: .95rem; color: var(--texto-suave); text-decoration: none; }
+.pastas__sub a:hover { color: var(--noite); background: var(--areia-claro); }
+.pastas__sub a[aria-current] { color: var(--noite); background: var(--areia-claro); font-weight: 500; }
 
 /* --- Página --- */
 .folha { min-width: 0; display: flex; flex-direction: column; }
@@ -171,7 +123,7 @@ h1 .script, h2 .script { font-size: 1.15em; line-height: .9; color: var(--area-f
 /* --- Celular --- */
 .topo-mobile, .barra-mobile { display: none; }
 
-@media (max-width: 1100px) { :root { --lateral: 250px; } .folha__conteudo { padding: 26px 34px 48px; } }
+@media (max-width: 1100px) { :root { --lateral: 210px; } .folha__conteudo { padding: 26px 34px 48px; } }
 
 @media (max-width: 860px) {
   body { font-size: 18px; }
