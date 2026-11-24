@@ -1,13 +1,13 @@
 ---
 // Página do curso Direito na Gringa. O pagamento acontece na Hotmart.
-import Base from '../../layouts/Base.astro';
-import Cabecalho from '../../components/Cabecalho.astro';
-import Texto from '../../components/Texto.astro';
-import BotaoLink from '../../components/BotaoLink.astro';
-import { pendente } from '../../lib/util';
-import { curso, paragrafos } from '../../lib/dados';
+import Base from '../layouts/Base.astro';
+import Cabecalho from '../components/Cabecalho.astro';
+import Texto from '../components/Texto.astro';
+import BotaoLink from '../components/BotaoLink.astro';
+import { pendente } from '../lib/util';
+import { curso, paragrafos } from '../lib/dados';
 ---
-<Base area="carreira" titulo={curso.nome} trilha={[{ nome: curso.nome }]} descricao={pendente(curso.chamada) ? undefined : curso.chamada}>
+<Base area="curso" titulo={curso.nome} descricao={pendente(curso.chamada) ? undefined : curso.chamada}>
   <Cabecalho etiqueta="meu curso" titulo={curso.nome}>
     <p class="cabecalho__descricao"><Texto valor={curso.chamada} /></p>
   </Cabecalho>

@@ -34,18 +34,18 @@ Pronto. No menu da esquerda aparecem as seções do seu site. Dica: salve essa p
 
 | Seção do painel | Onde aparece no site |
 |---|---|
-| **Meu perfil** | Página Bruna Barros: foto, apresentação e redes |
-| **Curso Direito na Gringa** | Carreira › Direito na Gringa (e o botão da Hotmart) |
-| **Viagens · Destinos e roteiros** | Viagens › Destinos e Viagens › Roteiros |
-| **Viagens · Dicas** | Viagens › Dicas (e a página do destino) |
-| **Viagens · Vídeos do YouTube** | Viagens › Vídeos (e a página do destino) |
-| **Viagens · Cupons** | Viagens › Cupons (e a página do destino) |
-| **Viagens · Hospedagens e serviços** | Viagens › Hospedagens e serviços (e a página do destino) |
-| **Viagens · Equipamentos e produtos** | Viagens › Equipamentos |
-| **Carreira · Guias e e-books** | Carreira › Guias e e-books |
-| **Carreira · Materiais gratuitos** | Carreira › Materiais gratuitos |
-| **Carreira · Ferramentas e indicações** | Carreira › Ferramentas e indicações |
-| **Carreira · Conteúdos** | Carreira › Conteúdos (separados por tema) |
+| **Meu perfil** | Página inicial: foto, apresentação e redes |
+| **Curso Direito na Gringa** | Pasta Direito na Gringa (e o botão da Hotmart) |
+| **Minhas compras** | Pasta Minhas compras, separada por pastinhas |
+
+### Adicionar um link de compra
+1. Abra **Minhas compras** e clique em **Add an entry**.
+2. Preencha o **nome do produto**, a **pasta** (ex.: `Viagem e mochilão`) e o **link de compra**.
+3. Clique em **Save**.
+
+Use sempre o mesmo nome de pasta, com a mesma escrita e acentos. Produtos com a mesma pasta ficam juntos. Uma pasta nova aparece no site assim que tem o primeiro produto.
+
+> As áreas antigas (Carreira internacional e Viagens) foram guardadas na pasta `arquivo/`, com o conteúdo que já existia. Para trazer alguma de volta, é só pedir ao Claude.
 
 ### Adicionar algo novo (cupom, vídeo, dica, produto…)
 1. Clique na seção. Por exemplo, **Viagens · Cupons**.
@@ -99,7 +99,7 @@ Nos campos de imagem, clique e envie a foto do computador ou do celular. Para ca
 
 ## 5. Se preferir, é só pedir ao Claude
 
-Você também pode abrir o Claude Code na pasta `CLAUDE CODE - PROJETO 1` e pedir qualquer mudança, inclusive de visual, que o painel não faz. Se você mexeu pelo painel antes, não precisa fazer nada: o Claude baixa as suas mudanças antes de começar.
+Você também pode abrir o Claude Code na pasta `BRUNABARROZVERCEL` e pedir qualquer mudança, inclusive de visual, que o painel não faz. Se você mexeu pelo painel antes, não precisa fazer nada: o Claude baixa as suas mudanças antes de começar.
 
 ---
 

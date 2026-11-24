@@ -78,14 +78,17 @@ const hospedagens = defineCollection({
   }),
 });
 
-const equipamentos = defineCollection({
+// ---------- COMPRAS (minhas indicações) ----------
+// Cada produto entra numa "pasta" (ex.: "Viagem e mochilão"). Pastas com o mesmo nome ficam juntas.
+const compras = defineCollection({
   type: 'data',
   schema: z.object({
     nome: z.string(),
-    categoria: texto,
+    pasta: z.preprocess((v) => (typeof v === 'string' && v.trim() ? v.trim() : 'Outros'), z.string()),
     descricao: texto,
     imagem: texto,
     link: texto,
+    ordem: z.preprocess(vazio, z.coerce.number().default(100)),
     exemplo,
   }),
 });
@@ -139,6 +142,6 @@ const conteudos = defineCollection({
 });
 
 export const collections = {
-  destinos, dicas, videos, cupons, hospedagens, equipamentos,
+  destinos, dicas, videos, cupons, hospedagens, compras,
   guias, materiais, ferramentas, conteudos,
 };
