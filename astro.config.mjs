@@ -10,5 +10,6 @@ export default defineConfig({
     '/carreira-internacional/direito-na-gringa': '/direito-na-gringa/',
     '/viagens': '/compras/',
     '/viagens/equipamentos': '/compras/',
+    '/compras/set-up': '/compras/set-up-do-home-office/',
   },
 });
