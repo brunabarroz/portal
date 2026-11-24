@@ -12,15 +12,20 @@ export async function getStaticPaths() {
 const { pasta } = Astro.props as { pasta: Pasta };
 ---
 <Base area="compras" titulo={pasta.nome} trilha={[{ nome: pasta.nome }]} subAtiva={pasta.href}>
-  <Cabecalho etiqueta="minhas compras" titulo={pasta.nome} descricao={`${pasta.produtos.length} ${pasta.produtos.length === 1 ? "indicação" : "indicações"}`} />
+  <Cabecalho etiqueta="minhas compras" titulo={pasta.nome} />
   <div class="grade grade--3 vitrine">
-    {pasta.produtos.map((p) => (
-      <Produto nome={p.data.nome} link={p.data.link} imagem={p.data.imagem} descricao={p.data.descricao} exemplo={p.data.exemplo} />
+    {pasta.produtos.map((p, i) => (
+      <Produto indice={i} nome={p.data.nome} link={p.data.link} imagem={p.data.imagem} descricao={p.data.descricao} exemplo={p.data.exemplo} />
     ))}
   </div>
 </Base>
 
 <style>
-  .vitrine { grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: 18px; }
-  @media (max-width: 860px) { .vitrine { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } }
+  .vitrine { grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr)); gap: 36px 26px; padding-top: 14px; }
+  @media (max-width: 860px) {
+    .vitrine { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 14px; }
+    .vitrine :global(.polaroid-produto) { padding: 7px 7px 10px; }
+    .vitrine :global(.polaroid-produto h3) { font-size: 1rem; }
+    .vitrine :global(.clipe) { width: 13px; height: 34px; top: -12px !important; }
+  }
 </style>

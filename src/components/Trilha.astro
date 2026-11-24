@@ -1,7 +1,12 @@
 ---
-// Link de volta para a página anterior (ex.: ← Minhas compras).
+// Caminho até a página atual (ex.: Viagens › Destinos › Barcelona).
 interface Props { itens: { nome: string; href?: string }[] }
 const { itens } = Astro.props;
-const voltar = [...itens].reverse().find((it, i) => i > 0 && it.href);
 ---
-{voltar && <nav class="trilha" aria-label="Voltar"><a href={voltar.href}>{voltar.nome}</a></nav>}
+<nav class="trilha" aria-label="Você está em">
+  <ol>
+    {itens.map((it, i) => (
+      <li>{i < itens.length - 1 && it.href ? <a href={it.href}>{it.nome}</a> : <span aria-current="page">{it.nome}</span>}</li>
+    ))}
+  </ol>
+</nav>

@@ -2,6 +2,7 @@
 // Moldura de todas as páginas: divisórias fixas, trilha, sub-abas e "continue folheando".
 import '../styles/global.css';
 import Abas from '../components/Abas.astro';
+import SubAbas from '../components/SubAbas.astro';
 import Trilha from '../components/Trilha.astro';
 import { AREAS, type AreaId } from '../lib/estrutura';
 
@@ -26,11 +27,11 @@ const tituloCompleto = area === 'bruna' && naEntrada ? 'Bruna Barros' : `${titul
     <meta name="description" content={descricao ?? a.convite} />
     <meta property="og:title" content={tituloCompleto} />
     <meta property="og:description" content={descricao ?? a.convite} />
-    <meta name="theme-color" content="#FBF9F6" />
+    <meta name="theme-color" content="#F5F1E9" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Pinyon+Script&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Courier+Prime:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Pinyon+Script&display=swap" rel="stylesheet" />
   </head>
   <body data-area={area}>
     <a class="pular" href="#conteudo">Pular para o conteúdo</a>
@@ -39,6 +40,7 @@ const tituloCompleto = area === 'bruna' && naEntrada ? 'Bruna Barros' : `${titul
       <div class="folha">
         <main id="conteudo" class="folha__conteudo">
           {!naEntrada && <Trilha itens={[{ nome: a.nome, href: a.href }, ...trilha]} />}
+          {area !== 'bruna' && <SubAbas area={area} ativa={subAtiva} />}
           <slot />
         </main>
       </div>

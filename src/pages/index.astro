@@ -1,113 +1,121 @@
 ---
 // PASTA 01 · BRUNA BARROS (página inicial)
-// No celular funciona como "link na bio": foto, nome e botões grandes logo no topo.
 import Base from '../layouts/Base.astro';
+import Texto from '../components/Texto.astro';
+import Preencher from '../components/Preencher.astro';
+import BotaoLink from '../components/BotaoLink.astro';
 import Icone from '../components/Icone.astro';
+import Ornamento from '../components/Ornamento.astro';
+import Clipe from '../components/Clipe.astro';
 import { AREAS } from '../lib/estrutura';
 import { pendente } from '../lib/util';
 import { perfil } from '../lib/dados';
 
-const redes = perfil.redes.filter((r) => !pendente(r.url));
-const atalhos = [
-  { area: 'curso', titulo: AREAS.curso.nome, sub: 'Meu curso para trabalhar para fora', href: AREAS.curso.href },
-  { area: 'compras', titulo: AREAS.compras.nome, sub: 'O que eu uso e indico', href: AREAS.compras.href },
-];
+const destaque = perfil.redes.filter((r) => r.destaque);
+const outrasRedes = perfil.redes.filter((r) => !r.destaque);
 ---
 <Base area="bruna" titulo="Bruna Barros" descricao={perfil.linhaApoio}>
-  <section class="inicio">
-    {!pendente(perfil.foto) && (
-      <figure class="inicio__foto"><img src={perfil.foto} alt={perfil.fotoDescricao} width="480" height="600" /></figure>
-    )}
+  <section class="mentor">
+    <div class="mentor__texto">
+      <p class="mentor__script script">{perfil.saudacao.replace(/\.$/, '')}</p>
+      <h1 class="mentor__titulo">{perfil.nome}</h1>
+      <p class="caps mentor__apoio">{perfil.linhaApoio}</p>
+      <p class="mentor__bio"><Texto valor={perfil.bio} /></p>
 
-    <header class="inicio__topo">
-      <p class="inicio__oi">{perfil.saudacao.replace(/\.$/, '')}</p>
-      <h1>{perfil.nome}</h1>
-      {perfil.linhaApoio && <p class="inicio__apoio">{perfil.linhaApoio}</p>}
-    </header>
+      <div class="redes">
+        {destaque.map((r) => (
+          <BotaoLink href={r.url} rotulo={r.rede} falta={`link do ${r.rede}`}><Icone rede={r.rede} /></BotaoLink>
+        ))}
+      </div>
+      {outrasRedes.length > 0 && (
+        <ul class="redes-menores">
+          {outrasRedes.map((r) => (
+            <li>
+              {pendente(r.url)
+                ? <span class="link-seta">{r.rede} <Preencher texto="link" /></span>
+                : <a class="link-seta" href={r.url} target="_blank" rel="noopener">{r.rede}</a>}
+            </li>
+          ))}
+        </ul>
+      )}
 
-    <nav class="inicio__links" aria-label="Por onde começar">
-      {atalhos.map((a) => (
-        <a class={`atalho atalho--${a.area}`} href={a.href}>
-          <span class="atalho__pasta" aria-hidden="true"></span>
-          <span class="atalho__texto"><strong>{a.titulo}</strong><small>{a.sub}</small></span>
-          <span class="atalho__seta" aria-hidden="true">→</span>
-        </a>
-      ))}
-    </nav>
-
-    {redes.length > 0 && (
-      <ul class="inicio__redes" aria-label="Redes sociais">
-        {redes.map((r) => (
-          <li><a href={r.url} target="_blank" rel="noopener"><Icone rede={r.rede} /><span>{r.rede}</span></a></li>
+      <ul class="atalhos" aria-label="Por onde começar">
+        {(['curso', 'compras'] as const).map((id, i) => (
+          <li>
+            <a class:list={['pasta', `pasta--${id}`, 'atalho']} href={AREAS[id].href}>
+              <span class="pasta__aba">{AREAS[id].numero} · {AREAS[id].curto}</span>
+              <span class="pasta__corpo">
+                <span class="pasta__enfeite"><Clipe tipo={i ? 'clipe' : 'prendedor'} estilo="position:static" /></span>
+                <span class="pasta__texto">
+                  <span class="pasta__nome">{AREAS[id].nome}</span>
+                  <span class="pasta__desc">{AREAS[id].convite}</span>
+                </span>
+              </span>
+            </a>
+          </li>
         ))}
       </ul>
-    )}
+    </div>
 
-    {!pendente(perfil.bio) && (
-      <div class="inicio__bio">
-        <h2>Sobre mim</h2>
-        <p>{perfil.bio}</p>
-      </div>
-    )}
+    <div class="mentor__foto">
+      <Ornamento tipo="luas" classe="mentor__luas" />
+      <figure class="oval">
+        {pendente(perfil.foto)
+          ? <div class="oval__vazia"><Preencher texto="sua foto" /></div>
+          : <img src={perfil.foto} alt={perfil.fotoDescricao} width="420" height="560" />}
+      </figure>
+      <Ornamento tipo="brilho" classe="mentor__brilho" />
+    </div>
   </section>
 </Base>
 
 <style>
-  .inicio {
-    display: grid; gap: 0 56px; align-items: start;
-    grid-template-columns: minmax(0, 1fr) minmax(240px, 340px);
-    grid-template-areas: 'topo foto' 'links foto' 'redes foto' 'bio foto';
-  }
-  .inicio__foto { grid-area: foto; margin: 0; border-radius: 200px 200px 18px 18px; overflow: hidden; aspect-ratio: 4 / 5; background: var(--lilas-claro); }
-  .inicio__foto img { width: 100%; height: 100%; object-fit: cover; }
-  .inicio__topo { grid-area: topo; }
-  .inicio__oi { font-family: var(--f-titulo); font-style: italic; font-size: 1.4rem; color: var(--lilas-forte); margin: 0 0 4px; }
-  .inicio__topo h1 { margin: 0 0 6px; }
-  .inicio__apoio { color: var(--suave); margin: 0 0 22px; }
-  .inicio__bio { grid-area: bio; max-width: 560px; color: var(--suave); margin-top: 28px; font-size: .98rem; }
-  .inicio__bio h2 { display: none; }
+  .mentor { display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; align-items: start; margin: 26px 0 40px; }
+  .mentor__texto { display: flex; flex-direction: column; }
 
-  .inicio__links { grid-area: links; display: grid; gap: 12px; max-width: 520px; margin: 8px 0 22px; }
-  .atalho {
-    --cor: var(--lilas); --forte: var(--lilas-forte);
-    display: flex; align-items: center; gap: 16px; padding: 14px 18px;
-    background: var(--branco); border: 1px solid var(--linha); border-radius: var(--raio);
-    color: var(--tinta); text-decoration: none; box-shadow: var(--sombra);
-    transition: transform .15s ease, border-color .15s ease;
-  }
-  .atalho--curso { --cor: var(--azul); --forte: var(--azul-forte); }
-  .atalho--compras { --cor: var(--areia); --forte: var(--areia-forte); }
-  .atalho:hover { transform: translateY(-2px); border-color: var(--forte); color: var(--tinta); }
-  /* mini pasta de arquivo */
-  .atalho__pasta { position: relative; flex: none; width: 42px; height: 32px; margin-top: 6px; background: var(--cor); border-radius: 0 5px 5px 5px; }
-  .atalho__pasta::before { content: ''; position: absolute; left: 0; top: -6px; width: 18px; height: 7px; background: var(--cor); border-radius: 4px 8px 0 0; }
-  .atalho__pasta::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 24px; background: color-mix(in srgb, var(--cor) 60%, #fff); border-radius: 0 0 5px 5px; }
-  .atalho__texto { flex: 1; display: grid; }
-  .atalho__texto strong { font-size: 1.05rem; font-weight: 600; }
-  .atalho__texto small { font-size: .88rem; color: var(--suave); }
-  .atalho__seta { color: var(--forte); font-size: 1.2rem; }
+  .atalhos { list-style: none; padding: 0; margin: 30px 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .atalho { padding-top: 28px; text-align: left; }
+  .atalho :global(.pasta__aba) { height: 30px; padding: 6px 28px 0 14px; font-size: .74rem; }
+  .atalho :global(.pasta__corpo) { min-height: 0; padding: 40px 18px 16px; }
+  .atalho :global(.pasta__corpo::before) { top: 10px; height: 26px; }
+  .atalho :global(.pasta__corpo::after) { inset: 22px 0 0 0; clip-path: polygon(0 14px, 60% 14px, 65% 0, 100% 0, 100% 100%, 0 100%); }
+  .atalho :global(.pasta__nome) { font-size: 1.45rem; }
+  .atalho :global(.pasta__desc) { font-size: .92rem; margin: 0; }
+  .atalho :global(.pasta__enfeite) { right: 18px; top: -4px; }
+  .atalho :global(.prendedor) { width: 26px; height: 30px; }
+  .atalho :global(.clipe) { width: 14px; height: 36px; }
+  .mentor__script { font-size: clamp(2.2rem, 3.4vw, 2.9rem); line-height: 1.05; color: var(--noite); margin: 0 0 10px; }
+  .mentor__titulo { font-size: clamp(1.9rem, 2.8vw, 2.4rem); font-weight: 500; margin: 0 0 8px; }
+  .mentor__apoio { color: var(--texto-suave); margin-bottom: 22px; }
+  .mentor__bio { font-size: 1.02rem; max-width: 540px; margin-bottom: 24px; }
+  .redes { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+  .redes-menores { list-style: none; display: flex; flex-wrap: wrap; gap: 10px 26px; padding: 0; margin: 0; }
 
-  .inicio__redes { grid-area: redes; list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-  .inicio__redes a {
-    display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px;
-    border: 1px solid var(--linha); border-radius: 999px; background: var(--branco);
-    color: var(--tinta); text-decoration: none; font-size: .9rem; font-weight: 500;
+  .mentor__foto { position: relative; display: grid; justify-items: center; }
+  :global(.mentor__luas) { width: 210px; color: var(--lilas-forte); margin-bottom: 18px; }
+  .oval {
+    margin: 0; width: min(100%, 330px); aspect-ratio: 3 / 4;
+    border-radius: 50%; overflow: hidden; position: relative;
+    outline: 1px solid var(--lilas-forte); outline-offset: 10px;
+    background: linear-gradient(170deg, var(--azul-claro), var(--lilas-claro) 55%, var(--areia-claro));
   }
-  .inicio__redes a:hover { border-color: var(--lilas-forte); }
-  .inicio__redes :global(svg) { width: 17px; height: 17px; }
+  .oval img { width: 100%; height: 100%; object-fit: cover; }
+  .oval__vazia { width: 100%; height: 100%; display: grid; place-items: center; padding: 30px; text-align: center; }
+  :global(.mentor__brilho) { position: absolute; width: 30px; right: 6%; bottom: 2%; color: var(--azul-forte); }
 
   @media (max-width: 860px) {
-    .inicio {
-      grid-template-columns: 1fr; text-align: center;
-      grid-template-areas: 'foto' 'topo' 'links' 'redes' 'bio';
-    }
-    .inicio__foto { width: 116px; height: 116px; aspect-ratio: 1; border-radius: 50%; margin: 6px auto 14px; }
-    .inicio__oi { font-size: 1.15rem; }
-    .inicio__topo h1 { font-size: 2.2rem; }
-    .inicio__apoio { margin-bottom: 18px; font-size: .95rem; }
-    .inicio__links { margin: 0 auto 18px; width: 100%; text-align: left; }
-    .inicio__redes { justify-content: center; margin-bottom: 32px; }
-    .inicio__bio { text-align: left; margin: 0 auto; border-top: 1px solid var(--linha); padding-top: 24px; }
-    .inicio__bio h2 { display: block; font-size: 1.5rem; }
+    .mentor { grid-template-columns: 1fr; gap: 14px; margin-top: 6px; text-align: center; }
+    .mentor__script { font-size: 2.1rem; }
+    .mentor__apoio { margin-bottom: 18px; }
+    .mentor__bio { order: 10; margin-top: 26px; text-align: left; }
+    .atalhos { grid-template-columns: 1fr; margin: 22px 0 0; }
+    .mentor__foto { order: -1; }
+    :global(.mentor__luas) { width: 120px; margin-bottom: 12px; }
+    .oval { width: 150px; outline-offset: 6px; }
+    :global(.mentor__brilho) { display: none; }
+    .mentor__bio { margin-left: auto; margin-right: auto; }
+    .redes, .redes-menores { justify-content: center; }
+    .redes { gap: 8px; margin-bottom: 14px; }
+    .redes :global(.botao) { min-height: 40px; padding: 8px 16px; }
   }
 </style>
